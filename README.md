@@ -37,12 +37,15 @@ Sebuah proyek Django sederhana sebagai Tugas Mata Kuliah Pemrograman Berbasis Pl
     ```bash
     django-admin startproject trubuy .
     ```
-9. Menambahkan ```ALLOWED_HOSTS``` di _file_ ```settings.py``` dengan ```"localhost", "127.0.0.1"```
-10. Memastikan file ```manage.py``` berada pada direktori saat ini dengan _command_
+9. Menambahkan ```ALLOWED_HOSTS``` di _file_ ```settings.py``` dengan:
+    ```bash
+   ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+    ```
+11. Memastikan file ```manage.py``` berada pada direktori saat ini dengan _command_
     ```bash
     python manage.py runserver
     ```
-11. Mengunggah proyek ke _repository_ ````Truby-PBP```` di GitHub
+12. Mengunggah proyek ke _repository_ ````Truby-PBP```` di GitHub
     Menambahkan berkas ````.gitignore```` pada direktori lokal ````Trubuy```` yang berisi:
     ```bash
     # Django
@@ -194,7 +197,8 @@ Sebuah proyek Django sederhana sebagai Tugas Mata Kuliah Pemrograman Berbasis Pl
     ...,
     'main'
     ]
-``` ke dalam daftar aplikasi sebagai elemen terakhir variabel ```INSTALLED_APPS``` pada file ```settings.py``` di direktori ```trubuy``` 
+    ```
+ke dalam daftar aplikasi sebagai elemen terakhir variabel ```INSTALLED_APPS``` pada file ```settings.py``` di direktori ```trubuy``` 
 15. Membuat direktori _templates_ pada direktori ```main``` dan _file_ baru bernama ```main.html``` yang berisi:
     ```html
     <h1>{{application}}</h1>
@@ -252,7 +256,7 @@ Sebuah proyek Django sederhana sebagai Tugas Mata Kuliah Pemrograman Berbasis Pl
     ```bash
     from django.urls import path, include
     ```
-dan menambahkan rute URL variabel ```urlpatterns``` dengan 
+21. Menambahkan rute URL variabel ```urlpatterns``` dengan 
     ```bash
     urlpatterns = [
     ...
