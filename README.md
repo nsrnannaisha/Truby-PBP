@@ -45,8 +45,7 @@ Sebuah proyek Django sederhana sebagai Tugas Mata Kuliah Pemrograman Berbasis Pl
     ```bash
     python manage.py runserver
     ```
-12. Mengunggah proyek ke _repository_ ````Truby-PBP```` di GitHub
-    Menambahkan berkas ````.gitignore```` pada direktori lokal ````Trubuy```` yang berisi:
+12. Menambahkan berkas ````.gitignore```` pada direktori lokal ````Trubuy```` yang berisi:
     ```bash
     # Django
     *.log
@@ -187,18 +186,17 @@ Sebuah proyek Django sederhana sebagai Tugas Mata Kuliah Pemrograman Berbasis Pl
     !.vscode/extensions.json
     .history
     ```
-12. Membuat aplikasi ```main``` dengan _command_:
+13. Membuat aplikasi ```main``` dengan _command_:
     ```bash
     python manage.py startapp main
     ```
-13. Menambahkan
+14. Ke dalam daftar aplikasi sebagai elemen terakhir variabel ```INSTALLED_APPS``` pada file ```settings.py``` di direktori ```trubuy```, menambahkan
     ```bash
     INSTALLED_APPS = [
     ...,
     'main'
     ]
     ```
-ke dalam daftar aplikasi sebagai elemen terakhir variabel ```INSTALLED_APPS``` pada file ```settings.py``` di direktori ```trubuy``` 
 15. Membuat direktori _templates_ pada direktori ```main``` dan _file_ baru bernama ```main.html``` yang berisi:
     ```html
     <h1>{{application}}</h1>
@@ -264,19 +262,21 @@ ke dalam daftar aplikasi sebagai elemen terakhir variabel ```INSTALLED_APPS``` p
     ...
     ]
     ```
-20. Mengetest aplikasi pada localhost dengan _command_:
+22. Mengetest aplikasi pada localhost dengan _command_:
     ```bash
     python manage.py runserver
     ```
     kemudian membuka ```http://localhost:8000/``` di _browser_
-21. Melakukan _add_, _commit_, dan _push_ pada repositoty GitHub ```Truby-PBP```
-22. Melakukan _deployment_ aplikasi ke PWS dengan:
-    a. Membuat projek baru dengan nama```trubuy```
-    b. Menambahkan URL _deployment_ PWS pada ```ALLOWED_HOSTS``` _file_ settings.py pada direktori ```trubuy``` dengan: ```nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
-    c. Menghubungkan PWS dengan direktori lokal dengan _command_:
-    ```git remote add pws git remote add pws https://pbp.cs.ui.ac.id/nisrina.annaisha/trubuy```
-    d. Melakukan _push_ dengan _command_:
-    ```git push pws master```
+23. Melakukan _add_, _commit_, dan _push_ pada repositoty GitHub ```Truby-PBP```
+24. Melakukan _deployment_ aplikasi ke PWS dengan membuat projek baru dengan nama```trubuy```
+25. Menambahkan URL _deployment_ PWS pada ```ALLOWED_HOSTS``` _file_ settings.py pada direktori ```trubuy``` dengan: ```nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
+26. Menghubungkan PWS dengan direktori lokal dan melakukan _push_ dengan _command_:
+    ```bash
+    git remote add pws git remote add pws https://pbp.cs.ui.ac.id/nisrina.annaisha/trubuy
+    ```
+    ```bash
+    git push pws master
+    ```
 
 ### Jawaban Pertanyaan
 1. Bagan _Request Client_
