@@ -188,8 +188,14 @@ Sebuah proyek Django sederhana sebagai Tugas Mata Kuliah Pemrograman Berbasis Pl
     ```bash
     python manage.py startapp main
     ```
-13. Menambahkan ```'main'``` ke dalam daftar aplikasi sebagai elemen terakhir variabel ```INSTALLED_APPS``` pada file ```settings.py``` di direktori ```trubuy``` 
-14. Membuat direktori _templates_ pada direktori ```main``` dan _file_ baru bernama ```main.html``` yang berisi:
+13. Menambahkan
+    ```bash
+    INSTALLED_APPS = [
+    ...,
+    'main'
+    ]
+``` ke dalam daftar aplikasi sebagai elemen terakhir variabel ```INSTALLED_APPS``` pada file ```settings.py``` di direktori ```trubuy``` 
+15. Membuat direktori _templates_ pada direktori ```main``` dan _file_ baru bernama ```main.html``` yang berisi:
     ```html
     <h1>{{application}}</h1>
 
@@ -198,7 +204,7 @@ Sebuah proyek Django sederhana sebagai Tugas Mata Kuliah Pemrograman Berbasis Pl
     <h5>Class: </h5>
     <p>{{ class }}<p>
     ```
-15. Mengubah ```models.py``` di dalam direktori aplikasi ```main``` menjadi:
+16. Mengubah ```models.py``` di dalam direktori aplikasi ```main``` menjadi:
     ```python
     from django.db import models
 
@@ -213,12 +219,12 @@ Sebuah proyek Django sederhana sebagai Tugas Mata Kuliah Pemrograman Berbasis Pl
         def is_out_of_stock(self):
             return self.quantity == 0
     ```
-16. Melakukan migrasi dengan _command_:
+17. Melakukan migrasi dengan _command_:
     ```
     python manage.py makemigrations
     python manage.py migrate
     ```
-17. Mengintegrasikan komponen MVT pada _file_ ```views.py``` pada direktori ```main``` dengan:
+18. Mengintegrasikan komponen MVT pada _file_ ```views.py``` pada direktori ```main``` dengan:
     ```python
     from django.shortcuts import render
 
@@ -231,7 +237,7 @@ Sebuah proyek Django sederhana sebagai Tugas Mata Kuliah Pemrograman Berbasis Pl
 
         return render(request, "main.html", context)
     ```
-18. Melakukan _routing_ pada aplikasi ```main``` pada file ```urls.py``` di direktori main:
+19. Melakukan _routing_ pada aplikasi ```main``` pada file ```urls.py``` di direktori main:
     ```python
     from django.urls import path
     from main.views import show_main
@@ -242,11 +248,18 @@ Sebuah proyek Django sederhana sebagai Tugas Mata Kuliah Pemrograman Berbasis Pl
         path('', show_main, name='show_main'),
     ]
     ```
-19. Mengonfigurasi _routing_ URL proyek pada _file_ ```urls.py``` dengan mengimpor fungsi ```include```:
-    ```python
+20. Mengonfigurasi _routing_ URL proyek pada _file_ ```urls.py``` dengan mengimpor fungsi ```include```:
+    ```bash
     from django.urls import path, include
     ```
-dan menambahkan rute URL variabel ```urlpatterns``` dengan ```path('', include('main.urls')),```
+dan menambahkan rute URL variabel ```urlpatterns``` dengan 
+    ```bash
+    urlpatterns = [
+    ...
+    path('', include('main.urls')),
+    ...
+    ]
+    ```
 20. Mengetest aplikasi pada localhost dengan _command_:
     ```bash
     python manage.py runserver
