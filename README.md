@@ -10,9 +10,6 @@ Sebuah proyek Django sederhana sebagai Tugas Mata Kuliah Pemrograman Berbasis Pl
 3. Menghubungkan repositori lokal dengan _repository_ di Github, dengan
     ```bash
     git branch -M main
-    ```
-dan 
-    ```bash
     git remote add origin https://github.com/nsrnannaisha/Truby-PBP.git
     ```
 4. Membuat _virtual environment_ pada direktory ```Trubuy``` dengan _command_:
@@ -246,7 +243,7 @@ dan
     ]
     ```
 19. Mengonfigurasi _routing_ URL proyek pada _file_ ```urls.py``` dengan mengimpor fungsi ```include```:
-    ```bash
+    ```python
     from django.urls import path, include
     ```
 dan menambahkan rute URL variabel ```urlpatterns``` dengan ```path('', include('main.urls')),```
