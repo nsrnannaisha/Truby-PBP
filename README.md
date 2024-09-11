@@ -1,10 +1,7 @@
 # Trubuy
 
 Sebuah proyek Django sederhana sebagai Tugas Mata Kuliah Pemrograman Berbasis Platform oleh Nisrina Annaisha Sarnadi dengan NPM 2306275960.
-Link web: 
-    ```bash
-    http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id
-    ```
+Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
 
 ## Tugas 2
 
