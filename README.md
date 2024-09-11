@@ -214,7 +214,6 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
     <h5>Quantity: </h5>
     <p>{{ quantity }}</p> 
     ```
-    update: Mengubah format
 16. Mengubah ```models.py``` di dalam direktori aplikasi ```main``` menjadi:
     ```python
     from django.db import models
@@ -253,7 +252,6 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
 
         return render(request, "main.html", context)
     ```
-    update: menambahkan 
 19. Melakukan _routing_ pada aplikasi ```main``` pada file ```urls.py``` di direktori main:
     ```python
     from django.urls import path
