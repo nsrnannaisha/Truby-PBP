@@ -8,6 +8,6 @@ urlpatterns = [
     path('add-product', add_product, name='add_product'),
     path('json/', show_json, name='json'),
     path('xml/', show_xml, name='xml'),
-    path('json/<int:id>/', show_json_by_id, name='json_by_id'),
-    path('xml/<int:id>/', show_xml_by_id, name='xml_by_id'),
+    path('json/<str:id>/', show_json_by_id, name='json_by_id'),
+    path('xml/<str:id>/', show_xml_by_id, name='xml_by_id'),
 ]
