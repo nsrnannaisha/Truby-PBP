@@ -1,3 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+
 <h1>Welcome to {{application}} App</h1>
 <h2>by {{ self_name }} from {{ class }}</h2>
 
@@ -11,3 +14,39 @@
 <p>{{ description }}</p> 
 <h5>Quantity: </h5>
 <p>{{ quantity }}</p> 
+
+{% if not product_entries %}
+<p>Belum ada data produk pada Trubuy</p>
+{% else %}
+
+<table>
+    <tr>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Description</th>
+        <th>Rating</th>
+        <th>Quantity</th>
+    </tr>
+
+    {% for ProductEntry in product_entries %}
+    <tr>
+        <td>{{ProductEntry.name}}</td>
+        <td>{{ProductEntry.price}}</td>
+        <td>{{ProductEntry.description}}</td>
+        <td>{{ProductEntry.rating}}</td>
+        <td>{{ProductEntry.quantity}}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+  
+<br />
+
+<a href="{% url 'main:add_product' %}">
+<button>Add Product</button>
+</a>
+
+{% endblock content %}
+
+
+
