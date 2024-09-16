@@ -1,6 +1,7 @@
 # Trubuy
 
 Sebuah proyek Django sederhana sebagai Tugas Mata Kuliah Pemrograman Berbasis Platform oleh Nisrina Annaisha Sarnadi dengan NPM 2306275960.
+Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
 
 ## Tugas 2
 
@@ -199,12 +200,19 @@ Sebuah proyek Django sederhana sebagai Tugas Mata Kuliah Pemrograman Berbasis Pl
     ```
 15. Membuat direktori _templates_ pada direktori ```main``` dan _file_ baru bernama ```main.html``` yang berisi:
     ```html
-    <h1>{{application}}</h1>
-
-    <h5>Name: </h5>
-    <p>{{ name }}<p>
-    <h5>Class: </h5>
-    <p>{{ class }}<p>
+    <h1>Welcome to {{application}} App</h1>
+    <h2>by {{ self_name }} from {{ class }}</h2>
+    
+    <h5> Product Name: </h5>
+    <p>{{ name }}</p> 
+    <h5>Price: </h5>
+    <p>{{ price }}</p> 
+    <h5>Rating: </h5>
+    <p>{{ rating }}</p> 
+    <h5>Description: </h5>
+    <p>{{ description }}</p> 
+    <h5>Quantity: </h5>
+    <p>{{ quantity }}</p> 
     ```
 16. Mengubah ```models.py``` di dalam direktori aplikasi ```main``` menjadi:
     ```python
@@ -233,8 +241,13 @@ Sebuah proyek Django sederhana sebagai Tugas Mata Kuliah Pemrograman Berbasis Pl
     def show_main(request):
         context = {
             'application' : 'Trubuy',
-            'name': 'Nisrina Annaisha Sarnadi',
-            'class': 'PBP F'
+            'self_name': 'Nisrina Annaisha Sarnadi',
+            'class': 'PBP F',
+            'name': 'BRUNBÅGE Desk Lamp',
+            'price': 'Rp349.000',
+            'description': 'LED desk lamp with a storage that can be dimmed' ,
+            'rating': '5/5',
+            'quantity': '17'
         }
 
         return render(request, "main.html", context)
