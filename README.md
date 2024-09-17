@@ -292,12 +292,201 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
     ```
 
 ### Jawaban Pertanyaan
-1. Bagan _Request Client_
+1. **Bagan _Request Client_**
 ![Bagan Request Client](https://github.com/user-attachments/assets/155e954e-b5d7-43b2-bbca-60b00eeede70)
 Pada bagan tersebut, _request_ dari User akan diproses dan diarahkan menuju ke View yang sesuai. View kemudian akan berinteraksi dengan Model untuk membaca atau menulis data, dan menggunakan Template untuk menghasilkan tampilan yang akan dikirim kembali sebagai respons ke User.
-2. Fungsi git dalam pengembangan perangkat lunak
+2. **Fungsi git dalam pengembangan perangkat lunak**
 Git berfungsi sebagai sistem kontrol yang membantu pengembang perangkat lunak untuk melacak perubahan kode, memfasilitasi kolaborasi tim, dan memungkinkan pengembangan terintegrasi melalui _branching_ dan _merging_. Git juga mencatat riwayat perubahan untuk memudahkan pencarian dan penyelesaian masalah, menjadikan pengembangan perangkat lunak lebih efisien dan terstruktur.
-3. Alasan Django menjadi permulaan pembelajaran pengambangan perangkat lunak.
+3. **Alasan Django menjadi permulaan pembelajaran pengambangan perangkat lunak.**
 Django merupakan pilihan yang populer bagi pemula dalam pengembangan web karena kemudahan penggunaannya. Django menyediakan berbagai fitur bawaan seperti autentikasi pengguna, pengelolaan _database_, dan sistem URL yang terstruktur yang dapat mempercepat proses pengembangan aplikasi web. Struktur yang jelas dan dokumentasi yang komprehensif membuat Django mudah dipelajari. 
-4. Alasan model pada Django disebut sebagai ORM.
+4. **Alasan model pada Django disebut sebagai ORM.**
 Model ORM (_Object-Relational Mapping_) pada Django digunakan untuk mempermudah pengelolaan data di _database_ menggunakan Python, tanpa perlu menulis perintah SQL yang rumit. Dengan ORM, pengembang dapat fokus pada logika aplikasi karena Django menangani detail teknis _database_, seperti pembuatan tabel dan _query_. 
+
+## Tugas 3
+
+### Implementasi Form dan Data Delivery pada Django
+1. Membuat ```forms.py``` pada direktori ```main``` yang berisi
+    ```python
+    from django.shortcuts import render, redirect  
+    from django.forms import ModelForm
+    from main.models import ProductEntry
+    
+    class ProductEntryForm(ModelForm):
+        class Meta:
+            model = ProductEntry
+            fields = ["name", "price", "description", "rating", "quantity"]
+    ```
+2. Menambahkan _import_ ```include``` pada ```views.py``` menjadi:
+    ```python
+    from django.shortcuts import render, redirect
+    ```  
+3. Menambahkan _method_ ```add_product``` untuk menambah entri _database_ di ```views.py``` pada direktori ```main```
+    ```python
+    def add_product(request):
+        form = ProductEntryForm(request.POST or None)
+
+        if form.is_valid() and request.method == "POST":
+            form.save()
+            return redirect('main:show_main')
+
+        context = {'form': form}
+        return render(request, "add_product.html", context)
+    ```
+4. Mengubah fungsi pada ```show_main ``` pada ```views.py``` menjadi:
+    ```python
+    def show_main(request):
+        product_entries = ProductEntry.objects.all()
+
+        context = {
+            'application' : 'Trubuy',
+            'self_name': 'Nisrina Annaisha Sarnadi',
+            'class': 'PBP F',
+            'name': 'BRUNBÅGE Desk Lamp',
+            'price': 'Rp349.000',
+            'description': 'LED desk lamp with a storage that can be dimmed' ,
+            'rating': '5/5',
+            'quantity': '17',
+            'product_entries': product_entries,
+
+        }
+
+        return render(request, "main.html", context)
+    ```
+5. Meng-_import_ fungsi ```add_product``` ```pada urls.py``` pada direktori ```main```:
+    ```bash
+    from main.views import show_main, add_product
+    ```
+6. Me-_routing_ URL ke laman yang bersangkutan di ```urls.py``` di direktori ```main```
+    ```python
+    urlpatterns = [
+        ...
+        path('add-product', add_product, name='add_product'),
+        ...
+    ]
+    ```
+7. Membuat berkas HTML baru dengan nama  ```add_product.html``` dengan:
+    ```html
+    {% extends 'base.html' %} 
+    {% block content %}
+    <h1>Add Product</h1>
+
+    <form method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+        <tr>
+        <td></td>
+        <td>
+            <input type="submit" value="Add Product" />
+        </td>
+        </tr>
+    </table>
+    </form>
+
+    {% endblock %}
+    ```
+8. Menambah dan mengubah ``main.html`` pada  direktori ``templates`` dengan:
+    ```html
+    {% extends 'base.html' %}
+    {% block content %}
+    .....
+    {% if not product_entries %}
+    <p>Belum ada data produk pada Trubuy</p>
+    {% else %}
+
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Description</th>
+            <th>Rating</th>
+            <th>Quantity</th>
+        </tr>
+
+        {% for ProductEntry in product_entries %}
+        <tr>
+            <td>{{ProductEntry.name}}</td>
+            <td>{{ProductEntry.price}}</td>
+            <td>{{ProductEntry.description}}</td>
+            <td>{{ProductEntry.rating}}</td>
+            <td>{{ProductEntry.quantity}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+    
+    <br />
+
+    <a href="{% url 'main:add_product' %}">
+    <button>Add Product</button>
+    </a>
+
+    {% endblock content %}
+    ```
+9. Menambahkan _import_ ```HttpResponse ``` dan ```Serializer``` pada ``views.py``.
+10. Menambahkan fungsi-fungsi yang diperlukan untuk menampilkan JSON dan XML secara keseluruhan maupun per entri _database_pada ```views.py```
+    ```python
+    def show_xml(request):
+        data = ProductEntry.objects.all()
+        return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
+
+    def show_json(request):
+        data = ProductEntry.objects.all()
+        return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+    def show_xml_by_id(request, id):
+        data = ProductEntry.objects.filter(pk=id)
+        return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
+
+    def show_json_by_id(request, id):
+        data = ProductEntry.objects.filter(pk=id)
+        return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+    ```
+11. Meng-_import_ fungsi-fungsi _import_ untuk menampilkan JSON dan XML pada ```urls.py``` menjadi:
+    ```python
+    from main.views import show_main, add_product, show_xml, show_json, show_xml_by_id, show_json_by_id
+    ```
+12. Me-_routing_ URL yang bersangkutan pada ```urls.py``` 
+    ```python
+    urlpatterns = [
+        ...
+        path('json/', show_json, name='json'),
+        path('xml/', show_xml, name='xml'),
+        path('json/<str:id>/', show_json_by_id, name='json_by_id'),
+        path('xml/<str:id>/', show_xml_by_id, name='xml_by_id'),
+    ]
+    ```
+13. Mengubah _primary key_ dari integer menjadi UUID dengan menghapus _file_ ```db.sqlite3```, mengimport ```uuid``` pada ```models.py``` pada direktori ```main```, mengubah fungsi ```ProductEntury```
+    ```python 
+    class ProductEntry(models.Model):
+        ...
+        id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+        ...
+    ```
+14. Melakukan tes aplikasi pada _localhost_ dengan _command_:
+    ```python
+    python manage.py runserver
+    ```
+    kemudian membuka ```http://localhost:8000/```, ```http://localhost:8000/xml```, ```http://localhost:8000/json```, ```http://localhost:8000/xml/[id]```, dan ```http://localhost:8000/json/[id]``` di _browser_
+
+### Jawaban Pertanyaan
+1. **Alasan diperlukannya _data delivery_ dalam pengimplementasian platform**
+_Data delivery_ adalah proses penting dalam menjalankan platform karena melibatkan komunikasi antara berbagai bagian sistem seperti _client-server_ atau _microservices_. Proses ini memastikan data dikirim dengan aman dan efisien, mendukung API, transfer data _real-time_, sinkronisasi layanan, serta sistem. Selain itu, _data delivery_ menjaga sinkronisasi informasi di seluruh platform, membantu analisis data untuk pengambilan keputusan, dan memastikan interaksi pengguna berjalan lancar. Tanpa data delivery yang baik, sistem bisa mengalami masalah atau gagal berfungsi.
+2. **Perbandingan XML dan JSON**
+XML dan JSON adalah format untuk mentransfer data. Menurut saya, keduanya baik untuk kebutuhan dari aplikasi yang dikembangkan. XML unggul ketika dibutuhkan validasi data yang kompleks dan deskripsi data yang lebih banyak. Namun, JSON lebih ringan, memiliki format yang lebih sederhana  sehingga mudah dibaca manusia, dan cenderung memiliki karakter yang lebih sedikit untuk pertukaran data dalam pengembangan web. Oleh karena kemudahannya tersebut, JSON lebih populer dibanding XML.
+3. **Fungsi method is_valid() pada form Django**
+Method ```is_valid()``` pada form Django digunakan untuk memvalidasi data yang dikirim oleh pengguna berdasarkan validitas yang telah ditentukan. Jika data valid, _method_ ini mengembalikan _True_ dan _False_ jika tidak valid, serta  menyimpan pesan kesalahan. Fungsi ini penting untuk menjaga data tetap akurat, mencegah kesalahan, dan meningkatkan keamanan. Selain itu, method ```is_valid()``` memastikan data sesuai dengan kebutuhan dan meningkatkan pengalaman pengguna dengan memberikan _feedback_ kesalahan input. 
+4. **Alasan dibutuhkannya csrf_token saat membuat form di Django**
+```csrf_token``` dibutuhkan saat membuat form di Django untuk melindungi aplikasi dari serangan CSRF _(Cross-Site Request Forgery)_. CSRF adalah jenis serangan dimana penyerang memaksa pengguna untuk melakukan tindakan yang tidak sah di situs web. Token ini memastikan bahwa permintaan yang diterima server berasal dari laman yang sah. Tanpa ```csrf_token```, penyerang dapat membuat formulir palsu di situs lain dan memaksa pengguna untuk mengirimkan data yang tidak sah atau berbahaya, yang bisa mengakibatkan perubahan data pengguna, transaksi tanpa izin, atau tindakan berbahaya lainnya.
+
+### Screenshot Postman
+1. **HTML Source**
+<img width="960" alt="1" src="https://github.com/user-attachments/assets/b4246772-fdc6-49bf-83cc-f64351ea6ade">
+2. **XML**
+<img width="960" alt="2" src="https://github.com/user-attachments/assets/107d776e-e5a7-489a-b270-c8144fe1a7c0">
+3. **XML by ID**
+<img width="960" alt="4" src="https://github.com/user-attachments/assets/69b96536-182e-4d06-bd1c-7fbd1de1d7fa">
+4. **JSON**
+<img width="960" alt="3" src="https://github.com/user-attachments/assets/4535c7f7-6ac6-4230-9b5d-93fe9b24e6e3">
+5. **JSON by ID**
+<img width="960" alt="5" src="https://github.com/user-attachments/assets/270e429d-b4c9-4df4-9124-2fff914340ae">
