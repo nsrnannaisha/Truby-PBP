@@ -364,7 +364,14 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
         ...
     ]
     ```
-7. Membuat berkas HTML baru dengan nama  ```add_product.html``` dengan:
+7. Membuat direktori ```templates``` pada direktori utama dan ```base.html``` sebagai basis dari laman-laman lain.
+8. Menambahkan direktori ```templates``` tersebut ke ```settings.py``` pada direktori ```trubuy```
+    ```python
+    ...
+    'DIRS': [BASE_DIR / 'templates'],
+    ...
+    ```
+9. Membuat berkas HTML baru dengan nama  ```add_product.html``` dengan:
     ```html
     {% extends 'base.html' %} 
     {% block content %}
@@ -385,7 +392,7 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
 
     {% endblock %}
     ```
-8. Menambah dan mengubah ``main.html`` pada  direktori ``templates`` dengan:
+10. Menambah dan mengubah ``main.html`` pada  direktori ``templates`` dengan:
     ```html
     {% extends 'base.html' %}
     {% block content %}
@@ -423,8 +430,8 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
 
     {% endblock content %}
     ```
-9. Menambahkan _import_ ```HttpResponse ``` dan ```Serializer``` pada ``views.py``.
-10. Menambahkan fungsi-fungsi yang diperlukan untuk menampilkan JSON dan XML secara keseluruhan maupun per entri _database_pada ```views.py```
+11. Menambahkan _import_ ```HttpResponse ``` dan ```Serializer``` pada ``views.py``.
+12. Menambahkan fungsi-fungsi yang diperlukan untuk menampilkan JSON dan XML secara keseluruhan maupun per entri _database_pada ```views.py```
     ```python
     def show_xml(request):
         data = ProductEntry.objects.all()
@@ -442,11 +449,11 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
         data = ProductEntry.objects.filter(pk=id)
         return HttpResponse(serializers.serialize("json", data), content_type="application/json")
     ```
-11. Meng-_import_ fungsi-fungsi _import_ untuk menampilkan JSON dan XML pada ```urls.py``` menjadi:
+13. Meng-_import_ fungsi-fungsi _import_ untuk menampilkan JSON dan XML pada ```urls.py``` menjadi:
     ```python
     from main.views import show_main, add_product, show_xml, show_json, show_xml_by_id, show_json_by_id
     ```
-12. Me-_routing_ URL yang bersangkutan pada ```urls.py``` 
+14. Me-_routing_ URL yang bersangkutan pada ```urls.py``` 
     ```python
     urlpatterns = [
         ...
@@ -456,27 +463,27 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
         path('xml/<str:id>/', show_xml_by_id, name='xml_by_id'),
     ]
     ```
-13. Mengubah _primary key_ dari integer menjadi UUID dengan menghapus _file_ ```db.sqlite3```, mengimport ```uuid``` pada ```models.py``` pada direktori ```main```, mengubah fungsi ```ProductEntury```
+15. Mengubah _primary key_ dari integer menjadi UUID dengan menghapus _file_ ```db.sqlite3```, meng-_import_ ```uuid``` pada ```models.py``` pada direktori ```main```, mengubah fungsi ```ProductEntury```
     ```python 
     class ProductEntry(models.Model):
         ...
         id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
         ...
     ```
-14. Melakukan tes aplikasi pada _localhost_ dengan _command_:
+16. Melakukan tes aplikasi pada _localhost_ dengan _command_:
     ```python
     python manage.py runserver
     ```
     kemudian membuka ```http://localhost:8000/```, ```http://localhost:8000/xml```, ```http://localhost:8000/json```, ```http://localhost:8000/xml/[id]```, dan ```http://localhost:8000/json/[id]``` di _browser_
 
 ### Jawaban Pertanyaan
-1. **Alasan diperlukannya _data delivery_ dalam pengimplementasian platform**
+1. **Alasan diperlukannya _data delivery_ dalam pengimplementasian platform.**
     _Data delivery_ adalah proses penting dalam menjalankan platform karena melibatkan komunikasi antara berbagai bagian sistem seperti _client-server_ atau _microservices_. Proses ini memastikan data dikirim dengan aman dan efisien, mendukung API, transfer data _real-time_, sinkronisasi layanan, serta sistem. Selain itu, _data delivery_ menjaga sinkronisasi informasi di seluruh platform, membantu analisis data untuk pengambilan keputusan, dan memastikan interaksi pengguna berjalan lancar. Tanpa data delivery yang baik, sistem bisa mengalami masalah atau gagal berfungsi.
-2. **Perbandingan XML dan JSON**
+2. **Perbandingan XML dan JSON.**
     XML dan JSON adalah format untuk mentransfer data. Menurut saya, keduanya baik untuk kebutuhan dari aplikasi yang dikembangkan. XML unggul ketika dibutuhkan validasi data yang kompleks dan deskripsi data yang lebih banyak. Namun, JSON lebih ringan, memiliki format yang lebih sederhana  sehingga mudah dibaca manusia, dan cenderung memiliki karakter yang lebih sedikit untuk pertukaran data dalam pengembangan web. Oleh karena kemudahannya tersebut, JSON lebih populer dibanding XML.
-3. **Fungsi method is_valid() pada form Django**
+3. **Fungsi method is_valid() pada form Django.**
     Method ```is_valid()``` pada form Django digunakan untuk memvalidasi data yang dikirim oleh pengguna berdasarkan validitas yang telah ditentukan. Jika data valid, _method_ ini mengembalikan _True_ dan _False_ jika tidak valid, serta  menyimpan pesan kesalahan. Fungsi ini penting untuk menjaga data tetap akurat, mencegah kesalahan, dan meningkatkan keamanan. Selain itu, method ```is_valid()``` memastikan data sesuai dengan kebutuhan dan meningkatkan pengalaman pengguna dengan memberikan _feedback_ kesalahan input. 
-4. **Alasan dibutuhkannya csrf_token saat membuat form di Django**
+4. **Alasan dibutuhkannya csrf_token saat membuat form di Django.**
     ```csrf_token``` dibutuhkan saat membuat form di Django untuk melindungi aplikasi dari serangan CSRF _(Cross-Site Request Forgery)_. CSRF adalah jenis serangan dimana penyerang memaksa pengguna untuk melakukan tindakan yang tidak sah di situs web. Token ini memastikan bahwa permintaan yang diterima server berasal dari laman yang sah. Tanpa ```csrf_token```, penyerang dapat membuat formulir palsu di situs lain dan memaksa pengguna untuk mengirimkan data yang tidak sah atau berbahaya, yang bisa mengakibatkan perubahan data pengguna, transaksi tanpa izin, atau tindakan berbahaya lainnya.
 
 ### Screenshot Postman
