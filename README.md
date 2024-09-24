@@ -355,7 +355,7 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
 
         return render(request, "main.html", context)
     ```
-5. Meng-_import_ fungsi ```add_product``` ```pada urls.py``` pada direktori ```main```:
+5. Meng-_import_ fungsi ```add_product``` pada ```urls.py``` pada direktori ```main```:
     ```bash
     from main.views import show_main, add_product
     ```
@@ -431,10 +431,12 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
     <button>Add Product</button>
     </a>
 
+    <h5>Sesi terakhir login: {{ last_login }}</h5>
+
     {% endblock content %}
     ```
 11. Menambahkan _import_ ```HttpResponse ``` dan ```Serializer``` pada ``views.py``.
-12. Menambahkan fungsi-fungsi yang diperlukan untuk menampilkan JSON dan XML secara keseluruhan maupun per entri _database_pada ```views.py```
+12. Menambahkan fungsi-fungsi yang diperlukan untuk menampilkan JSON dan XML secara keseluruhan maupun per entri _database_ pada ```views.py```
     ```python
     def show_xml(request):
         data = ProductEntry.objects.all()
@@ -507,3 +509,4 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
 
 5. **JSON by ID**
 <img width="960" alt="5" src="https://github.com/user-attachments/assets/270e429d-b4c9-4df4-9124-2fff914340ae">
+

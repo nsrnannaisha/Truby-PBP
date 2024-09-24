@@ -4,16 +4,6 @@
 <h1>Welcome to {{application}} App</h1>
 <h2>by {{ self_name }} from {{ class }}</h2>
 
-<p>{{ name }}</p> 
-<h5>Price: </h5>
-<p>{{ price }}</p> 
-<h5>Rating: </h5>
-<p>{{ rating }}</p> 
-<h5>Description: </h5>
-<p>{{ description }}</p> 
-<h5>Quantity: </h5>
-<p>{{ quantity }}</p> 
-
 {% if not product_entries %}
 <p>Belum ada data produk pada Trubuy</p>
 {% else %}
@@ -52,3 +42,4 @@
 <h5>Sesi terakhir login: {{ last_login }}</h5>
 
 {% endblock content %}
+ 
