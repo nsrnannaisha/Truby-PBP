@@ -739,5 +739,6 @@ Django menggunakan sesi untuk mengingat pengguna yang telah login. Sesi dalam Dj
 Untuk menjaga keamanan sesi, Django menerapkan beberapa lapisan perlindungan, seperti hanya menggunakan koneksi HTTPS yang aman, membatasi akses JavaScript ke _cookie_, dan mencegah serangan. Dengan demikian, data pengguna tetap aman.
 
 ### Dua akun dan tiga _dummy_ data
-<img width="960" alt="2024-09-25T11_12_36" src="https://github.com/user-attachments/assets/740bc029-f8b0-441e-a19e-6a422545a267">
-<img width="960" alt="2024-09-25T11_13_10" src="https://github.com/user-attachments/assets/d28a640a-709e-4334-9104-d4014510f649">
+<img width="960" alt="2024-09-25T11_12_36" src="https://github.com/user-attachments/assets/dc6b0866-55c1-47b7-9903-8c244d3b801d">
+<img width="960" alt="2024-09-25T11_13_10" src="https://github.com/user-attachments/assets/757b36b9-e79c-4f60-9f42-d0edb6466b8c">
+
