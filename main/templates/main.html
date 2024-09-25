@@ -1,11 +1,52 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Welcome to {{application}} App</h1>
-<h2>by {{ self_name }} from {{ class }}</h2>
+<style>
+  body {
+    background-color: #f9f7f3;
+    color: rgb(0, 0, 0); 
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  table, th, td {
+    border: 1px solid white;
+  }
+
+  th, td {
+    padding: 15px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f7a072;
+  }
+
+  td {
+    background-color: #eddea4;
+  }
+
+  button {
+    background-color: rgb(0, 0, 0);
+    color: #f7a072;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #000000;
+  }
+</style>
+
+<h1 style="text-align: center;">Welcome to {{application}} App</h1>
+<h2 style="text-align: center">by {{ self_name }} from {{ class }}</h2>
 
 {% if not product_entries %}
-<p>Belum ada data produk pada Trubuy</p>
+<p style="text-align: center">Belum ada data produk pada Trubuy</p>
 {% else %}
 
 <table>
@@ -37,9 +78,8 @@
 
 <a href="{% url 'main:logout' %}">
     <button>Logout</button>
-  </a>
+</a>
 
-<h5>Sesi terakhir login: {{ last_login }}</h5>
+<h5 style="text-align: center;">Sesi terakhir login: {{ last_login }}</h5>
 
 {% endblock content %}
- 
