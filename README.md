@@ -732,8 +732,12 @@ Proses _login_ pengguna dimulai dari pengguna yang memasukkan _username_ dan _pa
 
 Django mengelola _authentication_ dan _authorization_ melalui django.contrib.auth. Untuk vauthentication_, sistem ini menggunakan model User dan metode seperti authenticate() dan login(). Authorization dikelola melalui _permissions_ dan _groups_, dengan _decorator_ seperti @permission_required untuk membatasi akses ke _view_ tertentu. Dengan demikian, Django memudahkan pengelolaan kedua konsep secara terintegrasi.
 
-4. **Cara Django mengingat pengguna yang telah login, fungsi, dan keamanan cookies**
+4. **Cara Django mengingat pengguna yang telah login, fungsi, dan keamanan _cookies_**
 
 Django menggunakan sesi untuk mengingat pengguna yang telah login. Sesi dalam Django adalah mekanisme yang berguna untuk mengingat informasi tentang pengguna di antara berbagai permintaan HTTP. Informasi ini disimpan di server dan diakses melalui _ID_ sesi unik yang disimpan dalam _cookie_ di browser pengguna. Fungsi _Cookie_ adalah memungkinkan Django untuk mengenali pengguna saat mereka menjelajahi web. Selain itu, sesi juga dapat menyimpan data pengguna seperti preferensi.
 
 Untuk menjaga keamanan sesi, Django menerapkan beberapa lapisan perlindungan, seperti hanya menggunakan koneksi HTTPS yang aman, membatasi akses JavaScript ke _cookie_, dan mencegah serangan. Dengan demikian, data pengguna tetap aman.
+
+### Dua akun dan tiga _dummy_ data
+<img width="960" alt="2024-09-25T11_12_36" src="https://github.com/user-attachments/assets/740bc029-f8b0-441e-a19e-6a422545a267">
+<img width="960" alt="2024-09-25T11_13_10" src="https://github.com/user-attachments/assets/d28a640a-709e-4334-9104-d4014510f649">
