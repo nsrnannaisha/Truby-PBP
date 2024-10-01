@@ -22,7 +22,6 @@ def show_main(request):
         'npm': '2306275960',
         'product_entries': product_entries,
         'last_login': request.COOKIES['last_login'],
-
     }
 
     return render(request, "main.html", context)
@@ -91,10 +90,8 @@ def logout_user(request):
     return response
 
 def edit_product(request, id):
-    # Get mood entry berdasarkan id
     product = ProductEntry.objects.get(pk = id)
 
-    # Set mood entry sebagai instance dari form
     form = ProductEntryForm(request.POST or None, instance=product)
 
     if form.is_valid() and request.method == "POST":
@@ -107,4 +104,9 @@ def edit_product(request, id):
 def delete_product(request, id):
     product = ProductEntry.objects.get(pk = id)
     product.delete()
+
     return HttpResponseRedirect(reverse('main:show_main'))
+
+def main_view(request):
+    return render(request, 'main.html')
+

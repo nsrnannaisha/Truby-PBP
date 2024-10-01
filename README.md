@@ -218,7 +218,7 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
     ```python
     from django.db import models
 
-    class MoodEntry(models.Model):
+    class ProductEntry(models.Model):
         name = models.CharField(max_length=255)
         price = models.IntegerField()
         description = models.TextField()
@@ -673,9 +673,9 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
 13. Mengganti fungsi ```last_login``` dengan memabhan blok ```if form.is_valid```
 ```python
     if form.is_valid() and request.method == "POST":
-        mood_entry = form.save(commit=False)
-        mood_entry.user = request.user
-        mood_entry.save()
+        ProductEntry = form.save(commit=False)
+        ProductEntry.user = request.user
+        ProductEntry.save()
         return redirect('main:show_main')
 ```
 
@@ -691,14 +691,14 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
 
 16. Menambahkan kode pada ProductEntry
 ```python
-    class MoodEntry(models.Model):
+    class ProductEntry(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 ```
 
 17. Menambahkan value dari product_entries dan context pada fungsi show_main
 ```python
     def show_main(request):
-    mood_entries = MoodEntry.objects.filter(user=request.user)
+    product_entries = ProductEntry.objects.filter(user=request.user)
 
     context = {
          'name': request.user.username,
