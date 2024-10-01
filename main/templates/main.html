@@ -48,7 +48,6 @@
 {% if not product_entries %}
 <p style="text-align: center">Belum ada data produk pada Trubuy</p>
 {% else %}
-
 <table>
     <tr>
         <th>Product</th>
@@ -58,18 +57,26 @@
         <th>Quantity</th>
     </tr>
 
-    {% for ProductEntry in product_entries %}
+    {% for product in product_entries %}  
     <tr>
-        <td>{{ProductEntry.name}}</td>
-        <td>{{ProductEntry.price}}</td>
-        <td>{{ProductEntry.description}}</td>
-        <td>{{ProductEntry.rating}}</td>
-        <td>{{ProductEntry.quantity}}</td>
+        <td>{{ product.name }}</td>
+        <td>{{ product.price }}</td>
+        <td>{{ product.description }}</td>
+        <td>{{ product.rating }}</td>
+        <td>{{ product.quantity }}</td>
+        <td>
+            <a href="{% url 'main:edit_product' product.id %}">
+                <button>Edit</button>
+            </a>
+            <a href="{% url 'main:delete_product' product.id %}">
+                <button>Delete</button>
+            </a>
+        </td>
     </tr>
     {% endfor %}
 </table>
 {% endif %}
-  
+
 <br />
 
 <a href="{% url 'main:add_product' %}">

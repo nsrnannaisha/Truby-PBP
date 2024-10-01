@@ -1,5 +1,5 @@
 import datetime
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from main.forms import ProductEntryForm
 from main.models import ProductEntry
 from django.http import HttpResponse, HttpResponseRedirect
@@ -19,18 +19,14 @@ def show_main(request):
         'application' : 'Trubuy',
         'self_name': request.user.username,
         'class': 'PBP F',
-        'name': 'BRUNBÅGE Desk Lamp',
-        'price': 'Rp349.000',
-        'description': 'LED desk lamp with a storage that can be dimmed' ,
-        'rating': '5/5',
-        'quantity': '17',
+        'npm': '2306275960',
         'product_entries': product_entries,
         'last_login': request.COOKIES['last_login'],
 
     }
 
     return render(request, "main.html", context)
-
+ 
 def add_product(request):
     form = ProductEntryForm(request.POST or None)
 
@@ -93,3 +89,22 @@ def logout_user(request):
     response = HttpResponseRedirect(reverse('main:login'))
     response.delete_cookie('last_login')
     return response
+
+def edit_product(request, id):
+    # Get mood entry berdasarkan id
+    product = ProductEntry.objects.get(pk = id)
+
+    # Set mood entry sebagai instance dari form
+    form = ProductEntryForm(request.POST or None, instance=product)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "edit_product.html", context)
+
+def delete_product(request, id):
+    product = ProductEntry.objects.get(pk = id)
+    product.delete()
+    return HttpResponseRedirect(reverse('main:show_main'))
