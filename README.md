@@ -1129,7 +1129,7 @@ Melakukan kustomisasi design untuk halaman utama
 {% endblock content %}
 ```
 
-Melakukan kustomisasi design untuk menampilkan card product
+Melakukan kustomisasi design untuk menampilkan card product. Menampilkan tombol untuk mengedit dan menghapus product.
 ```html
 <div class="flex justify-center mb-8">
   <div class="relative break-inside-avoid bg-[#D8B4A0] shadow-xl rounded-lg p-4 border-2 border-brown-600 transform rotate-1 hover:rotate-0 transition-transform duration-300 max-w-xs">
@@ -1241,7 +1241,97 @@ Menambah dan melakukan kustomisasi design untuk navigasi bar
 
 ### Jawaban Pertanyaan
 
-1) **Urutan prioritas pengambilan CSS selector**
-2) **Alasan responsive design menjadi konsep yang penting dalam pengembangan aplikasi web dan  contoh aplikasi yang sudah dan belum menerapkan responsive design**
-3) **Perbedaan antara margin, border, dan padding, serta cara untuk mengimplementasikannya**
-4) **Konsep flex box dan grid layout beserta kegunaannya**
+1. **Urutan prioritas pengambilan CSS selector**
+  a) Inline styles (urutan tertinggi)
+
+Gaya yang ditulis langsung pada elemen HTML dengan menggunakan atribut style. Contoh:
+```html
+<div style="color: red;">Text in red</div>
+```
+
+  2) ID selectors
+
+Selector yang menggunakan tanda # diikuti oleh nama ID yang diberikan ke elemen. ID ini bersifat unik atau hanya boleh ada satu elemen dengan ID yang sama dalam satu halaman HTML. Contoh: 
+```html
+#header {
+    color: blue;
+}
+```
+```html
+<div id="header">Text in blue</div>
+```
+
+  3) Classes selector
+
+Selector yang menggunakan tanda titik (.) diikuti oleh nama class. Class digunakan untuk memberikan gaya pada sekelompok elemen yang memiliki atribut class yang sama.  Contoh:
+```html
+.text-large {
+    font-size: 20px;
+}
+```
+```html
+<div class="text-large">Large text</div>
+```
+
+  4) Element selector (urutan terendah)
+
+Selector paling umum yang langsung merujuk pada tag HTML, seperti div, p, atau h1. Jika elemen tidak memiliki class atau ID, elemen selector yang mendefinisikan gaya pada tag HTML akan diterapkan. Contoh:
+```
+p {
+    color: green;
+}
+```
+```html
+<p>This is green text.</p>
+```
+
+2. **Alasan responsive design menjadi konsep yang penting dalam pengembangan aplikasi web dan contoh aplikasi yang sudah dan belum menerapkan responsive design**
+
+Responsive design adalah pendekatan yang memastikan aplikasi web tampil dan berfungsi optimal di berbagai perangkat dengan ukuran layar berbeda, seperti pada desktop dan mobile. Hal ini penting untuk memastikan tata letak serta pengalaman pengguna dalam menggunakan aplikasi web tidak terganggu. Contoh aplikasi yang yang sudah menerapkannya adalah Youtube. Aplikasi ini ini dirancang untuk secara otomatis menyesuaikan tata letaknya sesuai dengan ukuran layar perangkat yang digunakan oleh pengguna. Baik di desktop, tablet, maupun ponsel, YouTube mampu menampilkan video, menu, dan elemen-elemen lain secara optimal. Aplikasi yang belum menerapkan responsive design adalah academic.ui.ac.id karena web ini belum dioptimalisasikan untuk perangkat mobile. Ketika dibuka di perangkat mobile, tampilannya akan mengecil sehingga perlu di-zoom agar text dapat terbaca dan bisa menggunakan fitur-fitur pada SIAKNG ini.
+
+3. **Perbedaan antara margin, border, dan padding, serta cara untuk mengimplementasikannya**
+
+Margin, border, dan padding adalah properti CSS yang digunakan untuk mengontrol jarak dan tampilan elemen dalam sebuah halaman web. 
+
+**Margin**
+
+Margin mengatur jarak antara elemen dengan elemen lainnya di sekitarnya. Cara untuk mengimplementasikannya adalah dengan menambahkan properti margin dalam CSS untuk elemen yang ingin diatur jaraknya. Nilai margin dapat ditentukan misalnya, margin: 20px yang akan menambahkan jarak sebesar 20 piksel di semua sisi elemen. Contoh:
+```html
+p {
+  margin-top: 100px;      /* jarak 100px di atas elemen */
+  margin-bottom: 100px;   /* jarak 100px di bawah elemen */
+  margin-right: 150px;    /* jarak 150px di kanan elemen */
+  margin-left: 80px;      /* jarak 80px di kiri elemen */
+}
+```
+
+**Border**
+
+Border adalah garis batas yang mengelilingi elemen. Cara untuk mengimplementasikannya adalah dengan menambahkan properti border dalam CSS untuk elemen yang ingin diberi garis di sekelilingnya. Ketebalan, jenis, dan warna border bisa ditentukan misalnya, border: 2px solid black, yang akan menghasilkan garis hitam tebal 2 piksel di sekitar elemen. Contoh:
+```html
+.box {
+  border: 4px solid black;
+}
+```
+
+**Padding**
+
+ Padding mengatur jarak antara konten elemen dengan border-nya.  Cara untuk mengimplementasikannya adalah dengan menambahkan properti padding dalam CSS untuk elemen yang ingin diatur ruang di dalamnya. Nilai padding bisa ditentukan misalnya, padding: 15px, yang akan menambahkan ruang sebesar 15 piksel di dalam border, antara konten dan garis border. Contoh:
+```html
+div {
+  padding-top: 50px;      /* Ruang 50px di atas elemen /*
+  padding-right: 30px;    /* Jarak 30px di sebelah kanan elemen */
+  padding-bottom: 50px;   /* Ruang 50px di bawah elemen */
+  padding-left: 80px;     /* Jarak 80px di sebelah kiri elemen */
+}
+```
+
+4. **Konsep flex box dan grid layout beserta kegunaannya**
+
+**Flex Box**
+
+_Flex box_ merupakan model tata letak CSS yang dirancang untuk memberikan cara yang lebih efisien dalam mengatur dan mendistribusikan ruang di dalam kontainer, terutama saat bekerja dengan elemen-elemen yang memiliki ukuran yang bervariasi. _Flex box_ digunakan untuk penataan satu dimensi, memungkinkan penyusunan otomatis elemen-elemen di dalam kontainer, serta perataan dan distribusi ruang yang lebih fleksibel. Implementasinya ada pada pembuatan navigasi bar, _product card_, dan _form_.
+
+**Grid Layout**
+
+_Grid Layout_  model tata letak CSS yang memungkinkan penciptaan tata letak dua dimensi dengan kontrol yang lebih besar terhadap posisi elemen di dalam kontainer. _Grid layout_ digunakan untuk pangaturan desain dua dimensi, kontrol posisi, dan _responsive design_. Implementasinya ada pada pembuatan _widget_ informasi, tata letak halaman (_header, sidebar, footer_, dll), dan _dashboard._
