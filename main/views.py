@@ -91,7 +91,6 @@ def logout_user(request):
 
 def edit_product(request, id):
     product = ProductEntry.objects.get(pk = id)
-
     form = ProductEntryForm(request.POST or None, instance=product)
 
     if form.is_valid() and request.method == "POST":
