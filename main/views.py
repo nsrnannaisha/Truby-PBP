@@ -55,16 +55,18 @@ def show_json_by_id(request, id):
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
 def register(request):
-    form = UserCreationForm()
-
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, 'Your account has been successfully created!')
             return redirect('main:login')
-    context = {'form':form}
+    else:
+        form = UserCreationForm()
+    
+    context = {'form': form}
     return render(request, 'register.html', context)
+
 
 def login_user(request):
     if request.method == 'POST':
