@@ -60,6 +60,7 @@ def register(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Your account has been successfully created!')
+            print(f'User created: {user.username}')
             return redirect('main:login')
     else:
         form = UserCreationForm()
