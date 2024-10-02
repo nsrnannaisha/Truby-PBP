@@ -3,6 +3,10 @@
 Sebuah proyek Django sederhana sebagai Tugas Mata Kuliah Pemrograman Berbasis Platform oleh Nisrina Annaisha Sarnadi dengan NPM 2306275960.
 Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
 
+
+<details>
+  <summary>Tugas 2</summary>
+
 ## Tugas 2
 
 ### Proses Pembuatan Projek Django
@@ -303,7 +307,12 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
     Django merupakan pilihan yang populer bagi pemula dalam pengembangan web karena kemudahan penggunaannya. Django menyediakan berbagai fitur bawaan seperti autentikasi pengguna, pengelolaan _database_, dan sistem URL yang terstruktur yang dapat mempercepat proses pengembangan aplikasi web. Struktur yang jelas dan dokumentasi yang komprehensif membuat Django mudah dipelajari.
    
 7. **Alasan model pada Django disebut sebagai ORM.**
-    Model ORM (_Object-Relational Mapping_) pada Django digunakan untuk mempermudah pengelolaan data di _database_ menggunakan Python, tanpa perlu menulis perintah SQL yang rumit. Dengan ORM, pengembang dapat fokus pada logika aplikasi karena Django menangani detail teknis _database_, seperti pembuatan tabel dan _query_. 
+    Model ORM (_Object-Relational Mapping_) pada Django digunakan untuk mempermudah pengelolaan data di _database_ menggunakan Python, tanpa perlu menulis perintah SQL yang rumit. Dengan ORM, pengembang dapat fokus pada logika aplikasi karena Django menangani detail teknis _database_, seperti pembuatan tabel dan _query_.
+
+</details>
+
+<details>
+  <summary>Tugas 3</summary>
 
 ## Tugas 3
 
@@ -510,6 +519,11 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
 5. **JSON by ID**
 <img width="960" alt="5" src="https://github.com/user-attachments/assets/270e429d-b4c9-4df4-9124-2fff914340ae">
 
+</details>
+
+<details>
+  <summary>Tugas 4</summary>
+
 ## Tugas 4
 
 ### Implementasi Autentikasi, Session, dan Cookies pada Django
@@ -679,7 +693,17 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
         return redirect('main:show_main')
 ```
 
-14. Menambah potongan kode berikut pada ```context show_main``` file ```views.py```
+14. Menambah potongan kode berikut pada ```context show_main``` file def edit_product(request, id):
+    product = ProductEntry.objects.get(pk = id)
+    form = ProductEntryForm(request.POST or None, instance=product)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "edit_product.html", context)
+views.py```
 ```python
     'last_login': request.COOKIES['last_login'],
 ```
@@ -715,9 +739,7 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
     ```
     kemudian membuka ```http://localhost:8000/``` di _browser_
 
-### Jawaban Pertanyaan
-1. **Perbedaan HttpResponseRedirect() dan redirect()**
-
+1. **Perbedaan antara HttpResponseRedirect() dan redirect()**
 HttpResponseRedirect() adalah sebuah kelas pada Django yang berfungsi untuk mengembalikan respons pengalihan (_redirect_) ke URL yang ditentukan secara manual. Untuk menggunakan kelas ini, URL harus disertakan secara lengkap. redirect() adalah _shortcut function_ yang lebih fleksibel karena bisa menerima nama URL, objek model, atau URL langsung, sehingga lebih mudah digunakan
    
 2. **Cara kerja penghubungan model Product dengan User**
@@ -742,3 +764,484 @@ Untuk menjaga keamanan sesi, Django menerapkan beberapa lapisan perlindungan, se
 <img width="960" alt="2024-09-25T11_12_36" src="https://github.com/user-attachments/assets/dc6b0866-55c1-47b7-9903-8c244d3b801d">
 <img width="960" alt="2024-09-25T11_13_10" src="https://github.com/user-attachments/assets/757b36b9-e79c-4f60-9f42-d0edb6466b8c">
 
+</details>
+
+<details>
+  <summary>Tugas 5</summary>
+
+## Tugas 5
+
+### Proses Kustomisasi
+
+<details>
+  <summary>Edit Product</summary>
+
+1) Menambahkan fungsi ```edit_product```
+```python
+def edit_product(request, id):
+    product = ProductEntry.objects.get(pk = id)
+    form = ProductEntryForm(request.POST or None, instance=product)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "edit_product.html", context)
+```
+
+2) Menambahkan import di views.py
+```python```
+from django.shortcuts import .., reverse
+from django.http import .., HttpResponseRedirect
+```
+
+3) Membuat file edit_product.html di main/templates yang berisi
+```html
+{% extends 'base.html' %}
+{% load static %}
+{% block meta %}
+<title>Edit Product</title>
+{% endblock meta %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<div class="flex flex-col min-h-screen bg-gray-100">
+  <div class="container mx-auto px-4 py-8 mt-16 max-w-xl">
+    <h1 class="text-3xl font-bold text-center mb-8 text-black">Edit Product</h1>
+  
+    <div class="bg-white shadow-md rounded-lg p-6 form-style">
+      <form method="POST" class="space-y-6">
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="flex flex-col">
+            <label for="{{ field.id_for_label }}" class="mb-2 font-semibold text-gray-700">
+              {{ field.label }}
+            </label>
+            <div class="w-full">
+              {{ field }}
+            </div>
+            {% if field.help_text %}
+              <p class="mt-1 text-sm text-gray-500">{{ field.help_text }}</p>
+            {% endif %}
+            {% for error in field.errors %}
+              <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endfor %}
+        <div class="flex justify-center mt-6">
+          <button type="submit" class="bg-[#D2B48C] hover:bg-[#C2A17E] text-white font-semibold px-6 py-3 rounded-lg transition duration-300 ease-in-out w-full">
+            Edit Product
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+```
+
+4) Menambahkan import edit_product dan path di urls.py
+```python
+path('edit-mood/<str:id>', edit_mood, name='edit_mood'),
+```
+
+5) Melakukan penyesuaian di main.html
+
+</details>
+
+<details>
+  <summary>Delete Product</summary>
+
+1) Menambahkan fungsi ```delete_product```
+```python
+def delete_product(request, id):
+    product = ProductEntry.objects.get(pk = id)
+    product.delete()
+
+    return HttpResponseRedirect(reverse('main:show_main'))
+```
+
+2) Menambahkan import delete_product dan path di urls.py
+```python
+path('delete/<str:id>', delete_product, name='delete_product'), 
+```
+
+3) Melakukan penyesuaian di main.html
+
+</details>
+
+<details>
+  <summary>Login</summary>
+
+Melakukan kustomisasi design untuk halaman login
+```html
+{% extends 'base.html' %}
+
+{% block meta %}
+<title>Login - Trubuy</title>
+{% endblock meta %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center w-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full">
+    <div class="bg-white rounded-lg shadow-lg p-8">
+      <div class="text-center">
+        <h1 class="text-4xl font-extrabold text-gray-800">Trubuy</h1>
+        <h2 class="mt-2 text-gray-700 text-2xl font-semibold">Trust Us to Buy Your Home Things</h2>
+      </div>
+      
+      <form class="mt-6 space-y-6" method="POST" action="">
+        {% csrf_token %}
+        <input type="hidden" name="remember" value="true">
+        <div class="rounded-md shadow-sm -space-y-px">
+          <div>
+            <label for="username" class="sr-only">Username or Email</label>
+            <input id="username" name="username" type="text" required class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-[#D2B48C] focus:border-[#D2B48C] sm:text-sm" placeholder="Username or Email">
+          </div>
+          <div>
+            <label for="password" class="sr-only">Password</label>
+            <input id="password" name="password" type="password" required class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-[#D2B48C] focus:border-[#D2B48C] sm:text-sm" placeholder="Password">
+          </div>
+        </div>
+
+        <div>
+          <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#D2B48C] hover:bg-[#C2A17E] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D2B48C]">
+            Log In
+          </button>
+        </div>
+      </form>
+
+      {% if messages %}
+      <div class="mt-4">
+        {% for message in messages %}
+        {% if message.tags == "success" %}
+              <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                  <span class="block sm:inline">{{ message }}</span>
+              </div>
+          {% elif message.tags == "error" %}
+              <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                  <span class="block sm:inline">{{ message }}</span>
+              </div>
+          {% else %}
+              <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative" role="alert">
+                  <span class="block sm:inline">{{ message }}</span>
+              </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="text-center mt-4">
+        <p class="text-sm text-gray-600">
+          Don't have an account yet?
+          <a href="{% url 'main:register' %}" class="font-medium text-[#D2B48C] hover:text-[#C2A17E]">
+            Register Now
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+```
+
+</details>
+
+<details>
+  <summary>Register</summary>
+    
+Melakukan kustomisasi design untuk halaman register
+```html
+{% extends 'base.html' %}
+
+{% block meta %}
+<title>Register - Trubuy</title>
+{% endblock meta %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center w-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full">
+    <div class="bg-white rounded-lg shadow-lg p-8">
+      <div class="text-center">
+        <h1 class="text-4xl font-extrabold text-gray-800">Trubuy</h1>
+        <h2 class="mt-2 text-gray-700 text-2xl font-semibold">Create your account</h2>
+      </div>
+      
+      <form class="mt-6 space-y-6" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="remember" value="true">
+
+        <div class="rounded-md shadow-sm">
+          <div class="mb-4">
+            <label for="username" class="mb-1 font-semibold text-black">Username or Email</label>
+            <input id="username" name="username" type="text" required class="appearance-none rounded-md block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#D2B48C] focus:border-[#D2B48C] sm:text-sm" placeholder="Username or Email">
+          </div>
+
+          <div class="mb-4">
+            <label for="password" class="mb-1 font-semibold text-black">Password</label>
+            <input id="password" name="password" type="password" required class="appearance-none rounded-md block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#D2B48C] focus:border-[#D2B48C] sm:text-sm" placeholder="Password">
+          </div>
+
+          <div class="mb-4">
+            <label for="password_confirm" class="mb-1 font-semibold text-black">Confirm Password</label>
+            <input id="password_confirm" name="password_confirm" type="password" required class="appearance-none rounded-md block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#D2B48C] focus:border-[#D2B48C] sm:text-sm" placeholder="Confirm Password">
+          </div>
+        </div>
+
+        <div>
+          <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#D2B48C] hover:bg-[#C2A77A] focus:ring-[#D2B48C] focus:border-[#D2B48C]">
+            Register
+          </button>
+        </div>
+      </form>
+
+      {% if messages %}
+      <div class="mt-4">
+        {% for message in messages %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <span class="block sm:inline">{{ message }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="text-center mt-4">
+        <p class="text-sm text-black">
+          Already have an account?
+          <a href="{% url 'main:login' %}" class="font-medium text-[#D2B48C] hover:text-[#C2A77A]">
+            Login here
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+```
+
+</details>
+
+<details>
+  <summary>Add Product</summary>
+
+Melakukan kustomisasi design untuk halaman add product
+```html
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>Add Product</title>
+{% endblock meta %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<div class="flex flex-col min-h-screen bg-gray-100">
+  <div class="container mx-auto px-4 py-8 mt-16 max-w-xl">
+    <h1 class="text-3xl font-bold text-center mb-8 text-black">Add Product</h1>
+
+    <div class="bg-white shadow-md rounded-lg p-6 form-style border border-gray-300">
+      <form method="POST" class="space-y-6">
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="flex flex-col">
+            <label for="{{ field.id_for_label }}" class="mb-2 font-semibold text-gray-700">
+              {{ field.label }}
+            </label>
+            <div class="w-full">
+              {{ field }}
+            </div>
+            {% if field.help_text %}
+              <p class="mt-1 text-sm text-gray-500">{{ field.help_text }}</p>
+            {% endif %}
+            {% for error in field.errors %}
+              <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endfor %}
+        <div class="flex justify-center mt-6">
+          <button type="submit" class="bg-[#D2B48C] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[#C5A68D] transition duration-300 ease-in-out w-full">
+            Add Product
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+```
+
+</details>
+
+<details>
+  <summary>Main Page</summary>
+
+Melakukan kustomisasi design untuk halaman utama
+```html
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<div class="overflow-x-hidden px-4 md:px-8 pb-8 pt-24 min-h-screen bg-gray-100 flex flex-col">
+  
+  <div class="flex justify-center mb-6">
+    <img src="{% static 'image/header_image.png' %}" alt="Header" class="w-full h-auto max-w-4xl rounded-lg shadow-md" />
+  </div>
+
+  <div class="relative mb-6">
+    <div class="text-center mb-4">
+      <h1 class="text-lg font-bold">Welcome {{ user.username }}</h1>
+      <p class="text-base">Trubuy by Nisrina Annaisha Sarnadi - {{ npm }} - {{ class }}</p>
+    </div>
+  </div>
+
+  <div class="flex justify-center mb-6">
+    <a href="{% url 'main:add_product' %}" class="bg-[#D2B48C] hover:bg-[#C2A17E] text-white font-bold py-1 px-2 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+      Add New Product
+    </a>
+  </div>
+
+
+  {% if not product_entries %}
+  <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
+    <img src="{% static 'image/no_products.png' %}" alt="Sad face" class="w-32 h-32 mb-4"/>
+    <p class="text-center text-gray-600 mt-4">No products</p>
+  </div>
+  {% else %}
+  <div class="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 w-full">
+      {% for product in product_entries %}
+          {% include 'card_product.html' with product=product %}
+      {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="px-3 mb-4 mt-auto">
+    <h1 class="text-black text-center">Last Login: {{ last_login }}</h1>
+  </div>
+</div>
+
+{% endblock content %}
+```
+
+Melakukan kustomisasi design untuk menampilkan card product
+```html
+<div class="flex justify-center mb-8">
+  <div class="relative break-inside-avoid bg-[#D8B4A0] shadow-xl rounded-lg p-4 border-2 border-brown-600 transform rotate-1 hover:rotate-0 transition-transform duration-300 max-w-xs">
+    <div class="text-center p-4">
+      <h3 class="font-bold text-2xl mb-2">{{ product.name }}</h3>
+      <hr class="border-brown-600 mb-2" />
+      <p class="font-semibold">Rp{{ product.price }}</p>
+      <p class="font-gray-600">{{ product.description }}</p>
+      <p class="font-gray-600">Rate: {{ product.rating }}</p>
+      <p class="font-gray-600">Stock: {{ product.quantity }}</p>
+      <div class="flex justify-center mt-4">
+        <a href="{% url 'main:edit_product' product.id %}" class="bg-brown-400 hover:bg-brown-500 text-white rounded-full p-2 transition duration-300 shadow-lg mr-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+          </svg>
+        </a>
+        <a href="{% url 'main:delete_product' product.id %}" class="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition duration-300 shadow-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+</details>
+
+<details>
+  <summary>Navigation Bar</summary>
+    
+Menambah dan melakukan kustomisasi design untuk navigasi bar
+```html
+<nav class="bg-[#D2B48C] shadow-lg fixed top-0 left-0 z-40 w-screen">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <div class="flex items-center">
+        <h1 class="text-2xl font-bold text-white">Trubuy</h1>
+      </div>
+
+      <!-- Desktop Menu -->
+      <div class="hidden md:flex items-center space-x-4">
+        <a href="{% url 'main:show_main' %}" class="text-white hover:text-gray-300">Home</a>
+        <a href="#" class="text-white hover:text-gray-300">Products</a>
+        <a href="#" class="text-white hover:text-gray-300">Categories</a>
+        <a href="#" class="text-white hover:text-gray-300">Cart</a>
+        {% if user.is_authenticated %}
+          <span class="text-black">{{ user.username }}</span>
+          <a href="{% url 'main:logout' %}" class="text-center bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+            Logout
+          </a>
+        {% else %}
+          <a href="{% url 'main:login' %}" class="text-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+            Login
+          </a>
+          <a href="{% url 'main:register' %}" class="text-center bg-[#D2B48C] hover:bg-[#C2A17E] text-white font-bold py-2 px-4 rounded transition duration-300">
+            Register
+          </a>
+        {% endif %}
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <div class="md:hidden flex items-center">
+        <button class="mobile-menu-button">
+          <svg class="w-6 h-6 text-white" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+            <path d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu hidden md:hidden px-4 w-full">
+    <div class="pt-2 pb-3 space-y-1">
+      <a href="#" class="block text-white hover:bg-indigo-700 px-3 py-2 rounded">Home</a>
+      <a href="#" class="block text-white hover:bg-indigo-700 px-3 py-2 rounded">Products</a>
+      <a href="#" class="block text-white hover:bg-indigo-700 px-3 py-2 rounded">Categories</a>
+      <a href="#" class="block text-white hover:bg-indigo-700 px-3 py-2 rounded">Cart</a>
+      {% if user.is_authenticated %}
+        <span class="block text-black px-3 py-2">{{ user.username }}</span>
+        <a href="{% url 'main:logout' %}" class="block text-center bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+          Logout
+        </a>
+      {% else %}
+        <a href="{% url 'main:login' %}" class="block text-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300 mb-2">
+          Login
+        </a>
+        <a href="{% url 'main:register' %}" class="block text-center bg-[#D2B48C] hover:bg-[#C2A17E] text-white font-bold py-2 px-4 rounded transition duration-300">
+          Register
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <script>
+    const btn = document.querySelector("button.mobile-menu-button");
+    const menu = document.querySelector(".mobile-menu");
+  
+    btn.addEventListener("click", () => {
+      menu.classList.toggle("hidden");
+    });
+  </script>
+</nav>
+```
+
+</details>
+
+### Jawaban Pertanyaan
+
+1) **Urutan prioritas pengambilan CSS selector**
+2) **Alasan responsive design menjadi konsep yang penting dalam pengembangan aplikasi web dan  contoh aplikasi yang sudah dan belum menerapkan responsive design**
+3) **Perbedaan antara margin, border, dan padding, serta cara untuk mengimplementasikannya**
+4) **Konsep flex box dan grid layout beserta kegunaannya**
