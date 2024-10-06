@@ -68,7 +68,6 @@ def register(request):
     return render(request, 'register.html', context)
 
 
-
 def login_user(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
