@@ -68,6 +68,7 @@ def register(request):
     return render(request, 'register.html', context)
 
 
+
 def login_user(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
@@ -80,10 +81,11 @@ def login_user(request):
             return response
         else:
             messages.error(request, "Invalid username or password. Please try again.")
-
+        
     else:
         form = AuthenticationForm(request)
     context = {'form': form}
+
     return render(request, 'login.html', context)
 
 def logout_user(request):
