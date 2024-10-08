@@ -222,7 +222,7 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
     ```python
     from django.db import models
 
-    class ProductEntry(models.Model):
+    class productEntry(models.Model):
         name = models.CharField(max_length=255)
         price = models.IntegerField()
         description = models.TextField()
@@ -321,11 +321,11 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
     ```python
     from django.shortcuts import render, redirect  
     from django.forms import ModelForm
-    from main.models import ProductEntry
+    from main.models import productEntry
     
-    class ProductEntryForm(ModelForm):
+    class productEntryForm(ModelForm):
         class Meta:
-            model = ProductEntry
+            model = productEntry
             fields = ["name", "price", "description", "rating", "quantity"]
     ```
 2. Menambahkan _import_ ```include``` pada ```views.py``` menjadi:
@@ -335,7 +335,7 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
 3. Menambahkan _method_ ```add_product``` untuk menambah entri _database_ di ```views.py``` pada direktori ```main```
     ```python
     def add_product(request):
-        form = ProductEntryForm(request.POST or None)
+        form = productEntryForm(request.POST or None)
 
         if form.is_valid() and request.method == "POST":
             form.save()
@@ -347,7 +347,7 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
 4. Mengubah fungsi pada ```show_main ``` pada ```views.py``` menjadi:
     ```python
     def show_main(request):
-        product_entries = ProductEntry.objects.all()
+        product_entries = productEntry.objects.all()
 
         context = {
             'application' : 'Trubuy',
@@ -422,13 +422,13 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
             <th>Quantity</th>
         </tr>
 
-        {% for ProductEntry in product_entries %}
+        {% for productEntry in product_entries %}
         <tr>
-            <td>{{ProductEntry.name}}</td>
-            <td>{{ProductEntry.price}}</td>
-            <td>{{ProductEntry.description}}</td>
-            <td>{{ProductEntry.rating}}</td>
-            <td>{{ProductEntry.quantity}}</td>
+            <td>{{productEntry.name}}</td>
+            <td>{{productEntry.price}}</td>
+            <td>{{productEntry.description}}</td>
+            <td>{{productEntry.rating}}</td>
+            <td>{{productEntry.quantity}}</td>
         </tr>
         {% endfor %}
     </table>
@@ -448,19 +448,19 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
 12. Menambahkan fungsi-fungsi yang diperlukan untuk menampilkan JSON dan XML secara keseluruhan maupun per entri _database_ pada ```views.py```
     ```python
     def show_xml(request):
-        data = ProductEntry.objects.all()
+        data = productEntry.objects.all()
         return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
 
     def show_json(request):
-        data = ProductEntry.objects.all()
+        data = productEntry.objects.all()
         return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
     def show_xml_by_id(request, id):
-        data = ProductEntry.objects.filter(pk=id)
+        data = productEntry.objects.filter(pk=id)
         return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
 
     def show_json_by_id(request, id):
-        data = ProductEntry.objects.filter(pk=id)
+        data = productEntry.objects.filter(pk=id)
         return HttpResponse(serializers.serialize("json", data), content_type="application/json")
     ```
 13. Meng-_import_ fungsi-fungsi _import_ untuk menampilkan JSON dan XML pada ```urls.py``` menjadi:
@@ -479,7 +479,7 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
     ```
 15. Mengubah _primary key_ dari integer menjadi UUID dengan menghapus _file_ ```db.sqlite3```, meng-_import_ ```uuid``` pada ```models.py``` pada direktori ```main```, mengubah fungsi ```ProductEntury```
     ```python 
-    class ProductEntry(models.Model):
+    class productEntry(models.Model):
         ...
         id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
         ...
@@ -687,15 +687,15 @@ Link web: ```http://nisrina-annaisha-trubuy.pbp.cs.ui.ac.id```
 13. Mengganti fungsi ```last_login``` dengan memabhan blok ```if form.is_valid```
 ```python
     if form.is_valid() and request.method == "POST":
-        ProductEntry = form.save(commit=False)
-        ProductEntry.user = request.user
-        ProductEntry.save()
+        productEntry = form.save(commit=False)
+        productEntry.user = request.user
+        productEntry.save()
         return redirect('main:show_main')
 ```
 
 14. Menambah potongan kode berikut pada ```context show_main``` file def edit_product(request, id):
-    product = ProductEntry.objects.get(pk = id)
-    form = ProductEntryForm(request.POST or None, instance=product)
+    product = productEntry.objects.get(pk = id)
+    form = productEntryForm(request.POST or None, instance=product)
 
     if form.is_valid() and request.method == "POST":
         form.save()
@@ -708,21 +708,21 @@ views.py```
     'last_login': request.COOKIES['last_login'],
 ```
 
-15. Menghubungkan model ProductEntry dengan User dengan menambahkan kode berikut pada models.py
+15. Menghubungkan model productEntry dengan User dengan menambahkan kode berikut pada models.py
 ```python
     from django.contrib.auth.models import User
 ```
 
-16. Menambahkan kode pada ProductEntry
+16. Menambahkan kode pada productEntry
 ```python
-    class ProductEntry(models.Model):
+    class productEntry(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 ```
 
 17. Menambahkan value dari product_entries dan context pada fungsi show_main
 ```python
     def show_main(request):
-    product_entries = ProductEntry.objects.filter(user=request.user)
+    product_entries = productEntry.objects.filter(user=request.user)
 
     context = {
          'name': request.user.username,
@@ -779,8 +779,8 @@ Untuk menjaga keamanan sesi, Django menerapkan beberapa lapisan perlindungan, se
 1) Menambahkan fungsi ```edit_product```
 ```python
 def edit_product(request, id):
-    product = ProductEntry.objects.get(pk = id)
-    form = ProductEntryForm(request.POST or None, instance=product)
+    product = productEntry.objects.get(pk = id)
+    form = productEntryForm(request.POST or None, instance=product)
 
     if form.is_valid() and request.method == "POST":
         form.save()
@@ -858,7 +858,7 @@ path('edit-mood/<str:id>', edit_mood, name='edit_mood'),
 1) Menambahkan fungsi ```delete_product```
 ```python
 def delete_product(request, id):
-    product = ProductEntry.objects.get(pk = id)
+    product = productEntry.objects.get(pk = id)
     product.delete()
 
     return HttpResponseRedirect(reverse('main:show_main'))
@@ -1335,3 +1335,244 @@ _Flex box_ merupakan model tata letak CSS yang dirancang untuk memberikan cara y
 **Grid Layout**
 
 _Grid Layout_  model tata letak CSS yang memungkinkan penciptaan tata letak dua dimensi dengan kontrol yang lebih besar terhadap posisi elemen di dalam kontainer. _Grid layout_ digunakan untuk pangaturan desain dua dimensi, kontrol posisi, dan _responsive design_. Implementasinya ada pada pembuatan _widget_ informasi, tata letak halaman (_header, sidebar, footer_, dll), dan _dashboard._
+
+<details>
+  <summary>Tugas 6</summary>
+
+## Tugas 6
+
+### JavaScript dan AJAX
+
+**Mengubah cards data product agar dapat mendukung AJAX GET**
+
+1. Mengambil data product dengan Fetch API melalui fungsi getProductEntries
+```html
+async function getProductEntries(){
+    return fetch("{% url 'main:json' %}").then((res) => res.json());
+}
+```
+
+2. Memanggil fungsi refreshProductEntries untuk mengambil data produk dengan penggunaan DOMPurify agar yerhindari dari serangan XSS
+```html
+async function refreshProductEntries() {
+      const products = await getProductEntries();
+      document.getElementById("product_entry_cards").innerHTML = ""; 
+      products.forEach(product => {
+          const productCard = `
+              <div class="flex justify-center mb-8">
+                  <div class="relative break-inside-avoid bg-[#D8B4A0] shadow-xl rounded-lg p-4 border-2 border-brown-600 transform rotate-1 hover:rotate-0 transition-transform duration-300 max-w-xs">
+                      <div class="text-center p-4">
+                          <h3 class="font-bold text-2xl mb-2">${DOMPurify.sanitize(product.product)}</h3>
+                          <hr class="border-brown-600 mb-2" />
+                          <p class="font-semibold">Rp${DOMPurify.sanitize(product.price)}</p>
+                          <p class="font-gray-600">${DOMPurify.sanitize(product.description)}</p>
+                          <p class="font-gray-600">Rate: ${DOMPurify.sanitize(product.rating)}</p>
+                          <p class="font-gray-600">Stock: ${DOMPurify.sanitize(product.quantity)}</p>
+                      </div>
+                  </div>
+              </div>
+          `;
+          document.getElementById("product_entry_cards").insertAdjacentHTML('beforeend', productCard); 
+      });
+  }
+```
+
+**Pengambilan data mood menggunakan AJAX GET**
+
+1. Memastikan endpoint hanya mengembalikan produk pengguna yang sedang login dengan mengganti line pertama pada fungsi ```show_xml``` dan ```show_json``` pada ```views.py``` dengan:
+```python
+data = productEntry.objects.filter(user=request.user)
+```
+
+**AJAX POST**
+
+1. Membuat tombol yang membuat sebuah modal dengan form untuk menambahkan product pada ```main.html```
+
+Tombol membuat product baru dengan ajax
+```html
+<button data-modal-target="crudModal" class="bg-[#9A7F5A] hover:bg-[#C2A17E] text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 flex items-center justify-center" onclick="showModal();">
+    Add New Product by AJAX
+</button>
+```
+
+Form untuk menambahkan product
+```html
+<div id="crudModal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 w-full flex items-center justify-center bg-gray-800 bg-opacity-50 overflow-x-hidden overflow-y-auto transition-opacity duration-300 ease-out">
+  <div id="crudModalContent" class="relative bg-white rounded-lg shadow-lg w-5/6 sm:w-3/4 md:w-1/2 lg:w-1/3 mx-4 sm:mx-0 transform scale-95 opacity-0 transition-transform transition-opacity duration-300 ease-out">
+    <!-- Modal header -->
+    <div class="flex items-center justify-between p-4 border-b rounded-t">
+      <h3 class="text-xl font-semibold text-gray-900">
+        Add New Product Entry
+      </h3>
+      <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" id="closeModalBtn">
+        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
+        <span class="sr-only">Close modal</span>
+      </button>
+    </div>
+    
+    <!-- Modal body -->
+    <div class="px-6 py-4 space-y-6 form-style">
+        <form id="productEntryForm">
+            <div class="mb-4">
+                <label for="product" class="block text-sm font-medium text-gray-700">Product</label>
+                <input type="text" id="product" name="product" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" required>
+            </div>
+            <div class="mb-4">
+                <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
+                <input type="number" id="price" name="price" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" required>
+            </div>
+            <div class="mb-4">
+                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                <input type="textfield" id="description" name="description" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" required>
+            </div>
+            <div class="mb-4">
+                <label for="rating" class="block text-sm font-medium text-gray-700">Rating (1-10)</label>
+                <input type="number" id="rating" name="rating" min="1" max="10" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" required>
+            </div>
+            <div class="mb-4">
+                <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
+                <input type="number" id="quantity" name="quantity" min="1" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" required>
+            </div>
+        </form>
+    </div>
+
+    <!-- Modal footer -->
+    <div class="flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2 p-6 border-t border-gray-200 rounded-b justify-center md:justify-end">
+      <button type="button" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg" id="cancelButton">Cancel</button>
+      <button type="submit" id="submitproductEntry" form="productEntryForm" class="bg-indigo-700 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg">Save</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+```
+
+3. Menambahkan import dan fungsi baru pada ```views.py`` 
+```python
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+
+@csrf_exempt
+@require_POST
+def add_product_entry_ajax(request):
+    product = strip_tags(request.POST.get("product"))
+    price = request.POST.get("price")
+    description = strip_tags(request.POST.get("description"))
+    rating = request.POST.get("rating")
+    quantity = request.POST.get("quantity")
+    user = request.user
+
+    new_product = productEntry(
+        product=product, price=price, description=description,
+        rating=rating, quantity=quantity, user=user
+    )
+    new_product.save()
+
+    return HttpResponse(b"CREATED", status=201)
+```
+
+4. Mengimport fungsi ```add_product_entry_ajax``` pada ```urls.py``` dan menambahkan path url-nya
+```python
+    path('add-product-entry-ajax', add_product_entry_ajax, name='add_product_entry_ajax'),
+```
+
+5. Menghubungkan form dengan path ```/create-ajax/```
+```javascript
+document.getElementById("productEntryForm").addEventListener("submit", (e) => {
+        e.preventDefault(); 
+        addproductEntry(); k
+    });
+```
+
+6. Melakukan refresh pada halaman utama secara asinkronus untuk menampilkan daftar product
+```javascript
+async function refreshProductEntries() {
+    document.getElementById("product_entry_cards").innerHTML = "";
+    document.getElementById("product_entry_cards").className = "";
+    const productEntries = await getProductEntries();
+    let htmlString = "";
+    let classNameString = "";
+
+    if (productEntries.length === 0) {
+        classNameString = "flex flex-col items-center justify-center min-h-[24rem] p-6";
+        htmlString = `
+            <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
+                <img src="{% static 'image/no_products.png' %}" alt="Sad face" class="w-32 h-32 mb-4"/>
+                <p class="text-center text-gray-600 mt-4">No Products</p>
+            </div>
+        `;
+    }
+    else {
+        classNameString = "columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 w-full"
+        productEntries.forEach((item) => {
+            const product = DOMPurify.sanitize(item.fields.product);
+            const price = DOMPurify.sanitize(item.fields.price);
+            const description = DOMPurify.sanitize(item.fields.description);
+            const rating = DOMPurify.sanitize(item.fields.rating);
+            const quantity = DOMPurify.sanitize(item.fields.quantity);
+
+            htmlString += `
+            <div class="relative break-inside-avoid">
+                <div class="absolute top-2 z-10 left-1/2 -translate-x-1/2 flex items-center -space-x-2">
+                    <div class="w-[3rem] h-8 bg-gray-200 rounded-md opacity-80 -rotate-90"></div>
+                    <div class="w-[3rem] h-8 bg-gray-200 rounded-md opacity-80 -rotate-90"></div>
+                </div>
+                <div class="relative top-5 bg-indigo-100 shadow-md rounded-lg mb-6 break-inside-avoid flex flex-col border-2 border-indigo-300 transform rotate-1 hover:rotate-0 transition-transform duration-300">
+                    <div class="bg-indigo-200 text-gray-800 p-4 rounded-t-lg border-b-2 border-indigo-300">
+                        <h3 class="font-bold text-xl mb-2">${product}</h3>
+                        <p class="text-gray-600">${item.fields.time}</p>
+                    </div>
+                    <div class="p-4">
+                        <p class="font-semibold text-lg mb-2">My Feeling</p>
+                        <p class="text-gray-700 mb-2">
+                            <span class="bg-[linear-gradient(to_bottom,transparent_0%,transparent_calc(100%_-_1px),#CDC1FF_calc(100%_-_1px))] bg-[length:100%_1.5rem] pb-1">${feelings}</span>
+                        </p>
+                        <div class="mt-4">
+                            <p class="text-gray-700 font-semibold mb-2">Intensity</p>
+                            <div class="relative pt-1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute top-0 -right-4 flex space-x-1">
+                    <a href="/edit-product/${item.pk}" class="bg-yellow-500 hover:bg-yellow-600 text-white rounded-full p-2 transition duration-300 shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                        </svg>
+                    </a>
+                    <a href="/delete/${item.pk}" class="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition duration-300 shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            `;
+        });
+    }
+    document.getElementById("product_entry_cards").className = classNameString;
+    document.getElementById("product_entry_cards").innerHTML = htmlString;
+}
+```
+
+
+### Jawaban Pertanyaan
+
+1. Manfaat penggunaan JavaScript dalam pengembangan aplikasi web!
+
+JavaScript adalah bahasa pemrograman yang digunakan untuk mengembangkan aplikasi web yang memungkinkan pembuatan halaman interaktif dan responsif. Dengan Document Object Model (DOM) dan komunikasi asinkron melalui AJAX, JavaScript dapat meningkatkan user experience dengan memperbarui konten secara real-time tanpa memuat ulang halaman. 
+
+2. Fungsi penggunaan await ketika kita menggunakan fetch() dan yang akan terjadi jika kita tidak menggunakan await
+
+Penggunaan await dalam konteks fetch() sangat penting untuk menangani Promise yang dikembalikan karena eksekusi kodenya lebih terstruktur dan mudah dibaca. Dengan await, JavaScript akan menunggu hingga permintaan jaringan selesai sebelum melanjutkan ke baris kode berikutnya. Tanpa await, kode akan terus berjalan tanpa menunggu respons dari fetch() yang dapat menyebabkan kesalahan jika ada kode yang bergantung pada data yang belum tersedia. Selain itu, await memungkinkan pengelolaan error yang lebih baik dengan menggunakan try dan catch, sehingga membuat kode lebih mudah dipahami dan dikelola.
+
+3. Alasan penggunaan decorator csrf_exempt pada view yang akan digunakan untuk AJAX POST
+
+Decorator `csrf_exempt` pada Django digunakan untuk menonaktifkan perlindungan CSRF pada view yang menangani permintaan AJAX POST.  Dengan menggunakan `csrf_exempt`, pengembang dapat mempermudah pengembangan aplikasi tanpa harus mengelola token CSRF, yang memudahkan integrasi antara frontend dan backend. 
+
+4. Alasan pembersihan data input pengguna juga dilakukan di backend selain frontend
+
+Pembersihan data input pengguna di backend dilakukan karena meskipun validasi dilakukan di frontend, pengguna dapat dengan mudah memanipulasi data sebelum dikirim ke server. Dengan melakukan pembersihan di backend, pengembang memastikan bahwa semua data yang diterima aman, valid, dan sesuai dengan aturan yang ditetapkan, sehingga menjaga konsistensi dan integritas data serta memberikan  keamanan tambahan, mencegah potensi kerentanan dan memastikan bahwa aplikasi tetap andal dan aman.
