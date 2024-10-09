@@ -5,8 +5,20 @@
       <hr class="border-brown-600 mb-2" />
       <p class="font-semibold">Rp{{ product.price }}</p>
       <p class="font-gray-600">{{ product.description }}</p>
-      <p class="font-gray-600">Rate: {{ product.rating }}</p>
+
+      <p class="font-semibold mb-2 text-white">Rating</p>
+
+      <!-- Bar Rating -->
+      <div class="relative pt-1">
+        <div class="flex mb-2 items-center justify-between">
+        </div>
+        <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-indigo-200">
+          <div style="width: {{ product.rating > 10 ? 100 : product.rating * 10 }}%;" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-black"></div>
+        </div>
+      </div>
+
       <p class="font-gray-600">Stock: {{ product.quantity }}</p>
+
       <div class="flex justify-center mt-4">
         <a href="{% url 'main:edit_product' product.id %}" class="bg-blue-400 hover:bg-blue-500 text-white rounded-full p-2 transition duration-300 shadow-lg mr-2">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
