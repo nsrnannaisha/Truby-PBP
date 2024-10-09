@@ -1336,6 +1336,8 @@ _Flex box_ merupakan model tata letak CSS yang dirancang untuk memberikan cara y
 
 _Grid Layout_  model tata letak CSS yang memungkinkan penciptaan tata letak dua dimensi dengan kontrol yang lebih besar terhadap posisi elemen di dalam kontainer. _Grid layout_ digunakan untuk pangaturan desain dua dimensi, kontrol posisi, dan _responsive design_. Implementasinya ada pada pembuatan _widget_ informasi, tata letak halaman (_header, sidebar, footer_, dll), dan _dashboard._
 
+</details>
+  
 <details>
   <summary>Tugas 6</summary>
 
@@ -1627,20 +1629,20 @@ async function refreshProductEntries() {
 
 ### Jawaban Pertanyaan
 
-1. Manfaat penggunaan JavaScript dalam pengembangan aplikasi web
+1. **Manfaat penggunaan JavaScript dalam pengembangan aplikasi web**
 
-JavaScript adalah bahasa pemrograman yang digunakan untuk mengembangkan aplikasi web yang memungkinkan pembuatan halaman interaktif dan responsif. Dengan Document Object Model (DOM) dan komunikasi asinkron melalui AJAX, JavaScript dapat meningkatkan user experience dengan memperbarui konten secara real-time tanpa memuat ulang halaman. 
+JavaScript adalah bahasa pemrograman yang digunakan untuk membuat aplikasi web dan dapat membuat halaman yang interaktif dan responsif. Dengan memanfaatkan Document Object Model (DOM) dan komunikasi asinkron melalui AJAX, JavaScript dapat diimplementasikan agar proses refresh konten pada web dapat terjadi secara langsung tanpa perlu me-refresh web.
 
-2. Fungsi penggunaan await ketika kita menggunakan fetch() dan yang akan terjadi jika kita tidak menggunakan await
+2. **Fungsi penggunaan await ketika kita menggunakan fetch() dan yang akan terjadi jika kita tidak menggunakan await**
 
-Penggunaan await dalam konteks fetch() sangat penting untuk menangani Promise yang dikembalikan karena eksekusi kodenya lebih terstruktur dan mudah dibaca. Dengan await, JavaScript akan menunggu hingga permintaan jaringan selesai sebelum melanjutkan ke baris kode berikutnya. Tanpa await, kode akan terus berjalan tanpa menunggu respons dari fetch() yang dapat menyebabkan kesalahan jika ada kode yang bergantung pada data yang belum tersedia. Selain itu, await memungkinkan pengelolaan error yang lebih baik dengan menggunakan try dan catch, sehingga membuat kode lebih mudah dipahami dan dikelola.
+Penggunaan await ketika kita menggunakan fetch() sangat penting dalam menangani Promise karena memungkinkan eksekusi kode berjalan secara sinkron ketika menunggu respons dari permintaan jaringan sehingga kode lebih terstruktur. Tanpa await, kode akan terus berjalan tanpa menunggu data yang dibutuhkan dan dapat menyebabkan kesalahan. Selain itu, await juga memungkinkan penanganan error yang lebih baik melalui try and catch dan meningkatkan efisiensi aplikasi.
 
-3. Alasan penggunaan decorator csrf_exempt pada view yang akan digunakan untuk AJAX POST
+3. **Alasan penggunaan decorator csrf_exempt pada view yang akan digunakan untuk AJAX POST**
 
-Decorator `csrf_exempt` pada Django digunakan untuk menonaktifkan perlindungan CSRF pada view yang menangani permintaan AJAX POST.  Dengan menggunakan `csrf_exempt`, pengembang dapat mempermudah pengembangan aplikasi tanpa harus mengelola token CSRF, yang memudahkan integrasi antara frontend dan backend. 
+Decorator csrf_exempt digunakan pada view yang menangani permintaan AJAX POST untuk menonaktifkan sementara perlindungan CSRF. Dengan menonaktifkan CSRF, tidak perlu lagi ditambahkan token CSRF ke dalam form atau header permintaan AJAX. Namun, penggunaannya dapat menimbulkan risiko keamanan sehingga implementasinya hanya pada view yang memang benar-benar tidak memerlukan perlindungan CSRF.
 
-4. Alasan pembersihan data input pengguna juga dilakukan di backend selain frontend
+4. **Alasan pembersihan data input pengguna juga dilakukan di backend selain frontend**
 
-Pembersihan data input pengguna di backend dilakukan karena meskipun validasi dilakukan di frontend, pengguna dapat dengan mudah memanipulasi data sebelum dikirim ke server. Dengan melakukan pembersihan di backend, pengembang memastikan bahwa semua data yang diterima aman, valid, dan sesuai dengan aturan yang ditetapkan, sehingga menjaga konsistensi dan integritas data serta memberikan  keamanan tambahan, mencegah potensi kerentanan dan memastikan bahwa aplikasi tetap andal dan aman.
+Pembersihan data input pengguna dilakukan baik di frontend maupun backend karena meski validasi di frontend dapat menyaring sebagian besar input yang tidak valid, keamanan tambahan di backend tetap perlu diperlukan. Pembersihan data di backend memastikan bahwa semua data yang masuk ke sistem sudah valid dan konsisten sehingga mencegah serangan keamanan seperti injeksi SQL atau XSS. Selain itu, pembersihan data juga memastikan aplikasi berjalan dengan stabil. 
 
-<details>
+</details>
