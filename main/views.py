@@ -16,14 +16,14 @@ from django.utils.html import strip_tags
 @login_required(login_url='/login')
 
 def show_main(request):
-    product_entries = productEntry.objects.filter(user=request.user)
+    #product_entries = productEntry.objects.filter(user=request.user)
     context = {
         'application' : 'Trubuy',
         'self_name': request.user.username,
         'class': 'PBP F',
         'npm': '2306275960',
-        'last_login': request.COOKIES['last_login'],
-        'product_entries': product_entries,
+        'last_login': request.COOKIES.get('last_login', str(datetime.datetime.now())),
+        #'product_entries': product_entries,
     }
 
     return render(request, "main.html", context)
@@ -36,7 +36,6 @@ def add_product(request):
         productEntry.user = request.user
         productEntry.save()
 
-        messages.success(request, "Produk berhasil ditambahkan!")
         return redirect('main:show_main')
 
     context = {'form': form}

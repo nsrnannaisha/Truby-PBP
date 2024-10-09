@@ -1345,44 +1345,114 @@ _Grid Layout_  model tata letak CSS yang memungkinkan penciptaan tata letak dua 
 
 **Mengubah cards data product agar dapat mendukung AJAX GET**
 
-1. Mengambil data product dengan Fetch API melalui fungsi getProductEntries
-```html
-async function getProductEntries(){
-    return fetch("{% url 'main:json' %}").then((res) => res.json());
+1. Membuat fungsi refreshProductEntries untuk mengambil data produk dengan penggunaan DOMPurify agar terhindar dari serangan XSS
+```javascript
+async function refreshProductEntries() {
+    document.getElementById("product_entry_cards").innerHTML = "";
+    document.getElementById("product_entry_cards").className = "";
+    const productEntries = await getProductEntries(); 
+    let htmlString = "";
+    let classNameString = "";
+
+    if (productEntries.length === 0) {
+        classNameString = "flex flex-col items-center justify-center min-h-[24rem] p-6";
+        htmlString = `
+            <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
+                <img src="{% static 'image/no_products.png' %}" alt="Sad face" class="w-32 h-32 mb-4"/>
+                <p class="text-center text-gray-600 mt-4">No Products</p>
+            </div>
+        `;
+    } else {
+        classNameString = "columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 w-full";
+        productEntries.forEach((item) => {
+            const product = DOMPurify.sanitize(item.fields.product);
+            const price = DOMPurify.sanitize(item.fields.price);
+            const description = DOMPurify.sanitize(item.fields.description);
+            const rating = DOMPurify.sanitize(item.fields.rating);
+            const quantity = DOMPurify.sanitize(item.fields.quantity);
+
+            htmlString += `
+            <div class="relative break-inside-avoid bg-[#D2B48C] shadow-xl rounded-lg p-4 border-2 border-brown-600 transform rotate-1 hover:rotate-0 transition-transform duration-300 max-w-xs">
+                <div class="text-center p-4">
+                    <h3 class="font-bold text-2xl mb-2"> ${item.fields.product}</h3>
+                    <hr class="border-brown-600 mb-2" />
+                    <p class="font-semibold">Rp${item.fields.price}</p>
+                    <p class="font-semibold mb-2 text-white">Description</p>
+                    <p class="font-gray-600"> ${item.fields.description}</p>
+                    <p class="font-semibold mb-2 text-white">Rate</p>
+                    <p class="font-gray-600">${item.fields.rating}/10.0</p>
+                    <p class="font-semibold mb-2 text-white">Stock</p>
+                    <p class="font-gray-600">${item.fields.quantity}</p>
+
+                </div>
+                
+                <div class="flex justify-center mt-4">
+                    <div class="absolute top-2 right-2 flex space-x-1"></div>
+                    
+                    <div class="flex space-x-1">
+                        <a href="/edit-product/${item.pk}" class="bg-blue-500 hover:bg-yellow-600 text-white rounded-full p-2 transition duration-300 shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                        </svg>
+                        </a>
+                        <a href="/delete/${item.pk}" class="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition duration-300 shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                        </a>
+                    </div>
+                    </div>
+              </div>
+          </div>
+
+            `;
+        });
+    }
+    document.getElementById("product_entry_cards").className = classNameString;
+    document.getElementById("product_entry_cards").innerHTML = htmlString;
 }
 ```
 
-2. Memanggil fungsi refreshProductEntries untuk mengambil data produk dengan penggunaan DOMPurify agar yerhindari dari serangan XSS
+2. Menghapus kode tampilan card_product.html di main.html 
 ```html
-async function refreshProductEntries() {
-      const products = await getProductEntries();
-      document.getElementById("product_entry_cards").innerHTML = ""; 
-      products.forEach(product => {
-          const productCard = `
-              <div class="flex justify-center mb-8">
-                  <div class="relative break-inside-avoid bg-[#D8B4A0] shadow-xl rounded-lg p-4 border-2 border-brown-600 transform rotate-1 hover:rotate-0 transition-transform duration-300 max-w-xs">
-                      <div class="text-center p-4">
-                          <h3 class="font-bold text-2xl mb-2">${DOMPurify.sanitize(product.product)}</h3>
-                          <hr class="border-brown-600 mb-2" />
-                          <p class="font-semibold">Rp${DOMPurify.sanitize(product.price)}</p>
-                          <p class="font-gray-600">${DOMPurify.sanitize(product.description)}</p>
-                          <p class="font-gray-600">Rate: ${DOMPurify.sanitize(product.rating)}</p>
-                          <p class="font-gray-600">Stock: ${DOMPurify.sanitize(product.quantity)}</p>
-                      </div>
-                  </div>
-              </div>
-          `;
-          document.getElementById("product_entry_cards").insertAdjacentHTML('beforeend', productCard); 
-      });
-  }
+{% if not product_entries %}
+  <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
+      <img src="{% static 'image/no_products.png' %}" alt="Sad face" class="w-32 h-32 mb-4"/>
+      <p class="text-center text-gray-600 mt-4">No products</p>
+  </div>
+  {% else %}
+  <div class="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 w-full">
+      {% for product in product_entries %}
+          {% include 'card_product.html' %}
+      {% endfor %}
+  </div>
+  {% endif %}
 ```
 
-**Pengambilan data mood menggunakan AJAX GET**
+dan menggantinya dengan
+
+```html
+<div id="product_entry_cards"></div>
+```
+
+**Pengambilan data product menggunakan AJAX GET**
 
 1. Memastikan endpoint hanya mengembalikan produk pengguna yang sedang login dengan mengganti line pertama pada fungsi ```show_xml``` dan ```show_json``` pada ```views.py``` dengan:
 ```python
 data = productEntry.objects.filter(user=request.user)
 ```
+
+2. Menghapus penggunaan variabel ```product_entries``` pada fungsi ```show_main``` di views.py 
+
+
+3. Membuat fungsi ```getProductEntries``` untuk mengambil data dengan request GET ke url
+```javascript
+async function getProductEntries(){
+    return fetch("{% url 'main:json' %}").then((res) => res.json())
+}
+```
+
+4. Memanngil fungsi ```getProductEntries``` dalam fungsi ```refreshProductEntries```
 
 **AJAX POST**
 
@@ -1492,7 +1562,7 @@ document.getElementById("productEntryForm").addEventListener("submit", (e) => {
 async function refreshProductEntries() {
     document.getElementById("product_entry_cards").innerHTML = "";
     document.getElementById("product_entry_cards").className = "";
-    const productEntries = await getProductEntries();
+    const productEntries = await getProductEntries(); 
     let htmlString = "";
     let classNameString = "";
 
@@ -1504,9 +1574,8 @@ async function refreshProductEntries() {
                 <p class="text-center text-gray-600 mt-4">No Products</p>
             </div>
         `;
-    }
-    else {
-        classNameString = "columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 w-full"
+    } else {
+        classNameString = "columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 w-full";
         productEntries.forEach((item) => {
             const product = DOMPurify.sanitize(item.fields.product);
             const price = DOMPurify.sanitize(item.fields.price);
@@ -1515,41 +1584,39 @@ async function refreshProductEntries() {
             const quantity = DOMPurify.sanitize(item.fields.quantity);
 
             htmlString += `
-            <div class="relative break-inside-avoid">
-                <div class="absolute top-2 z-10 left-1/2 -translate-x-1/2 flex items-center -space-x-2">
-                    <div class="w-[3rem] h-8 bg-gray-200 rounded-md opacity-80 -rotate-90"></div>
-                    <div class="w-[3rem] h-8 bg-gray-200 rounded-md opacity-80 -rotate-90"></div>
+            <div class="relative break-inside-avoid bg-[#D2B48C] shadow-xl rounded-lg p-4 border-2 border-brown-600 transform rotate-1 hover:rotate-0 transition-transform duration-300 max-w-xs">
+                <div class="text-center p-4">
+                    <h3 class="font-bold text-2xl mb-2"> ${item.fields.product}</h3>
+                    <hr class="border-brown-600 mb-2" />
+                    <p class="font-semibold">Rp${item.fields.price}</p>
+                    <p class="font-semibold mb-2 text-white">Description</p>
+                    <p class="font-gray-600"> ${item.fields.description}</p>
+                    <p class="font-semibold mb-2 text-white">Rate</p>
+                    <p class="font-gray-600">${item.fields.rating}/10.0</p>
+                    <p class="font-semibold mb-2 text-white">Stock</p>
+                    <p class="font-gray-600">${item.fields.quantity}</p>
+
                 </div>
-                <div class="relative top-5 bg-indigo-100 shadow-md rounded-lg mb-6 break-inside-avoid flex flex-col border-2 border-indigo-300 transform rotate-1 hover:rotate-0 transition-transform duration-300">
-                    <div class="bg-indigo-200 text-gray-800 p-4 rounded-t-lg border-b-2 border-indigo-300">
-                        <h3 class="font-bold text-xl mb-2">${product}</h3>
-                        <p class="text-gray-600">${item.fields.time}</p>
-                    </div>
-                    <div class="p-4">
-                        <p class="font-semibold text-lg mb-2">My Feeling</p>
-                        <p class="text-gray-700 mb-2">
-                            <span class="bg-[linear-gradient(to_bottom,transparent_0%,transparent_calc(100%_-_1px),#CDC1FF_calc(100%_-_1px))] bg-[length:100%_1.5rem] pb-1">${feelings}</span>
-                        </p>
-                        <div class="mt-4">
-                            <p class="text-gray-700 font-semibold mb-2">Intensity</p>
-                            <div class="relative pt-1">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="absolute top-0 -right-4 flex space-x-1">
-                    <a href="/edit-product/${item.pk}" class="bg-yellow-500 hover:bg-yellow-600 text-white rounded-full p-2 transition duration-300 shadow-md">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" viewBox="0 0 20 20" fill="currentColor">
+                
+                <div class="flex justify-center mt-4">
+                    <div class="absolute top-2 right-2 flex space-x-1"></div>
+                    
+                    <div class="flex space-x-1">
+                        <a href="/edit-product/${item.pk}" class="bg-blue-500 hover:bg-yellow-600 text-white rounded-full p-2 transition duration-300 shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
                             <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                         </svg>
-                    </a>
-                    <a href="/delete/${item.pk}" class="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition duration-300 shadow-md">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </a>
+                        <a href="/delete/${item.pk}" class="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition duration-300 shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
                         </svg>
-                    </a>
-                </div>
-            </div>
+                        </a>
+                    </div>
+                    </div>
+              </div>
+          </div>
+
             `;
         });
     }
@@ -1558,10 +1625,9 @@ async function refreshProductEntries() {
 }
 ```
 
-
 ### Jawaban Pertanyaan
 
-1. Manfaat penggunaan JavaScript dalam pengembangan aplikasi web!
+1. Manfaat penggunaan JavaScript dalam pengembangan aplikasi web
 
 JavaScript adalah bahasa pemrograman yang digunakan untuk mengembangkan aplikasi web yang memungkinkan pembuatan halaman interaktif dan responsif. Dengan Document Object Model (DOM) dan komunikasi asinkron melalui AJAX, JavaScript dapat meningkatkan user experience dengan memperbarui konten secara real-time tanpa memuat ulang halaman. 
 
@@ -1576,3 +1642,5 @@ Decorator `csrf_exempt` pada Django digunakan untuk menonaktifkan perlindungan C
 4. Alasan pembersihan data input pengguna juga dilakukan di backend selain frontend
 
 Pembersihan data input pengguna di backend dilakukan karena meskipun validasi dilakukan di frontend, pengguna dapat dengan mudah memanipulasi data sebelum dikirim ke server. Dengan melakukan pembersihan di backend, pengembang memastikan bahwa semua data yang diterima aman, valid, dan sesuai dengan aturan yang ditetapkan, sehingga menjaga konsistensi dan integritas data serta memberikan  keamanan tambahan, mencegah potensi kerentanan dan memastikan bahwa aplikasi tetap andal dan aman.
+
+<details>
