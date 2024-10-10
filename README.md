@@ -1242,6 +1242,8 @@ Menambah dan melakukan kustomisasi design untuk navigasi bar
 ### Jawaban Pertanyaan
 
 1. **Urutan prioritas pengambilan CSS selector**
+
+   
   a) Inline styles (urutan tertinggi)
 
 Gaya yang ditulis langsung pada elemen HTML dengan menggunakan atribut style. Contoh:
@@ -1249,7 +1251,7 @@ Gaya yang ditulis langsung pada elemen HTML dengan menggunakan atribut style. Co
 <div style="color: red;">Text in red</div>
 ```
 
-  2) ID selectors
+  b) ID selectors
 
 Selector yang menggunakan tanda # diikuti oleh nama ID yang diberikan ke elemen. ID ini bersifat unik atau hanya boleh ada satu elemen dengan ID yang sama dalam satu halaman HTML. Contoh: 
 ```html
@@ -1261,7 +1263,7 @@ Selector yang menggunakan tanda # diikuti oleh nama ID yang diberikan ke elemen.
 <div id="header">Text in blue</div>
 ```
 
-  3) Classes selector
+  c) Classes selector
 
 Selector yang menggunakan tanda titik (.) diikuti oleh nama class. Class digunakan untuk memberikan gaya pada sekelompok elemen yang memiliki atribut class yang sama.  Contoh:
 ```html
@@ -1273,7 +1275,7 @@ Selector yang menggunakan tanda titik (.) diikuti oleh nama class. Class digunak
 <div class="text-large">Large text</div>
 ```
 
-  4) Element selector (urutan terendah)
+  d) Element selector (urutan terendah)
 
 Selector paling umum yang langsung merujuk pada tag HTML, seperti div, p, atau h1. Jika elemen tidak memiliki class atau ID, elemen selector yang mendefinisikan gaya pada tag HTML akan diterapkan. Contoh:
 ```
