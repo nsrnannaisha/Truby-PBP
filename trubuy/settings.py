@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-m!(ak9ju52!wf=i7-vzcq2s3i1zqvt_fthlo#*j%+7kz3&1^um
 PRODUCTION = os.getenv("PRODUCTION", False)
 DEBUG =  not PRODUCTION
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "nisrina-annaisha-trubuy.pbp.cs.ui.ac.id"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "nisrina-annaisha-trubuy.pbp.cs.ui.ac.id", "127.0.0.1:8000"]
 
 
 # Application definition
@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
+    'authentication',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'trubuy.urls'
@@ -74,6 +77,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'trubuy.wsgi.application'
 
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SAMESITE = 'None'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
